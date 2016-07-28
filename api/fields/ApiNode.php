@@ -1,6 +1,7 @@
 <?hh // strict
 
 require_once('ApiNonEdgeField.php');
+require_once('ApiEdge.php');
 
 abstract class ApiNode<T as NodeBase> extends ApiNonEdgeField {
 
@@ -45,7 +46,18 @@ abstract class ApiNode<T as NodeBase> extends ApiNonEdgeField {
         invariant($fields_tree instanceof ImmMap, 'Must be a Map');
         // TODO use a commmon interface
         // UNSAFE
-        $field_obj->setFieldsTree($fields_tree);
+        $field_obj->setFieldsTree(
+          $fields_tree->contains('fields')
+            ? $fields_tree['fields']
+            : ImmMap {}
+        );
+        if ($field_obj instanceof ApiEdge) {
+          $field_obj->setParams(
+            $fields_tree->contains('params')
+              ? $fields_tree['params']
+              : ImmMap {}
+          );
+        }
       }
       $result = await $field_obj->genResult();
       $response[$field] = $result;

@@ -1,11 +1,11 @@
 <?hh // strict
 
-// require_once('ApiFieldBase.php');
-// require_once('api/nodes/ApiNodeBase.php');
-//
+require_once('ApiFieldBase.php');
+
 abstract class ApiEdge<T as NodeBase> extends ApiFieldBase {
 
   private ImmMap<string, mixed> $fieldsTree = ImmMap {};
+  private ImmMap<string, mixed> $params = ImmMap {};
 
   abstract public function getEdgeClass(): classname<EdgeBase<T>>;
 
@@ -27,13 +27,18 @@ abstract class ApiEdge<T as NodeBase> extends ApiFieldBase {
       $nodes_data[] = $res;
     }
     return Map {
-      'count' => $nodes_data->count(),
+      'total_count' => $nodes_data->count(),
       'nodes' => $nodes_data,
     };
   }
 
   public function setFieldsTree(ImmMap<string, mixed> $fieldsTree): this {
     $this->fieldsTree = $fieldsTree;
+    return $this;
+  }
+
+  public function setParams(ImmMap<string, string> $params): this {
+    $this->params = $params;
     return $this;
   }
 }

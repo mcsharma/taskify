@@ -10,14 +10,11 @@ abstract class EdgeBase<T as NodeBase> {
 
   abstract public function getTargetNodeType(): classname<T>;
 
-
-  public async function genNodes(): Awaitable<Map<int, T>> {
-
+  final public async function genNodes(): Awaitable<Map<int, T>> {
     $edges = await TaskifyDB::genEdgesForType(
       $this->sourceID,
       $this->getEdgeType()
     );
-
     $node_type = $this->getTargetNodeType();
     $nodes = Map {};
     foreach ($edges as $edge) {

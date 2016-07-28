@@ -61,25 +61,56 @@ final class ApiServer {
 
     $field = '';
     $ret = Map {};
+    $child_fields = null;
+    $str .= ',';
     for ($i = 0; $i < strlen($str); $i++) {
       $c = $str[$i];
       if ($c === ',') {
-        $ret[$field] = true;
+        list($field_name, $params) = self::extractParams($field);
+        if ($params === null && $child_fields === null) {
+          $ret[$field_name] = true;
+        } else {
+          $map = Map {};
+          if ($params !== null) {
+            $map['params'] = $params;
+          }
+          if ($child_fields !== null) {
+            $map['fields'] = $child_fields;
+          }
+          $ret[$field_name] = $map->toImmMap();
+        }
         $field = '';
+        $child_fields = null;
       } else if ($c === '{') {
         $child_query = substr($str, $i+1, $braces_map[$i] - $i - 1);
-        $ret[$field] = self::parseFieldMap($child_query);
-        $i = $braces_map[$i] + 1;
-        $field = '';
+        $child_fields = self::parseFieldMap($child_query);
+        $i = $braces_map[$i];
       } else if ($c === '}') {
         invariant_violation('Should never come here');
       } else {
         $field.=$c;
       }
     }
-    if ($field) {
-      $ret[$field] = true;
-    }
     return $ret->toImmMap();
+  }
+
+  // Convert string like tasks.offset(10).limit(5)
+  // into tuple('tasks', Map {offset => 10, limit => 5})
+  private static function extractParams(
+    string $str,
+  ): (string, ?ImmMap<string, string>) {
+    $list = explode('.', $str);
+    $name = array_shift($list);
+    if (count($list) === 0) {
+      return tuple($name, null);
+    }
+    $params_map = Map {};
+    foreach ($list as $param) {
+      $open_pos = strpos($param, '(');
+      $param_name = substr($param, 0, $open_pos);
+      $param_val = substr($param, $open_pos + 1, strlen($param) - $open_pos - 2);
+      $params_map[$param_name] = $param_val;
+    }
+    return tuple($name, $params_map->toImmMap());
   }
 }
