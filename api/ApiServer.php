@@ -2,12 +2,13 @@
 
 require_once('api/nodes/ApiUserNode.php');
 require_once('api/nodes/ApiTaskNode.php');
+require_once('ApiList.php');
 
 final class ApiServer {
 
   public static async function genResponseJson(
     string $path,
-    Map<string, string> $params,
+    ImmMap<string, string> $params,
   ): Awaitable<string> {
     $res_map = await self::genResponse($path, $params);
     if ($params->contains('pretty')) {
@@ -18,9 +19,12 @@ final class ApiServer {
 
   public static async function genResponse(
     string $path,
-    Map<string, string> $params,
+    ImmMap<string, string> $params,
   ): Awaitable<Map<string, mixed>> {
-
+    if ($params->containsKey('method') &&
+        strtolower($params['method']) === 'post') {
+      return await self::genProcessPostRequest($path, $params);
+    }
     $node_id = (int)$path;
     $type = IDUtil::idToType($node_id);
 
@@ -44,6 +48,51 @@ final class ApiServer {
       ->genSetRootNodeID($node_id);
 
     return await $api_node->genResult();
+  }
+
+  private static async function genProcessPostRequest(
+    string $path,
+    ImmMap<string, string> $params,
+  ): Awaitable<Map<string, mixed>> {
+    list($node_id, $edge_name) = explode('/', $path);
+    $node_id = (int)$node_id;
+    $node_typename = IDUtil::idToApiTypename($node_id);
+    $class_name = strtolower('api'.$node_typename.$edge_name.'post');
+    $post_api_classes = ApiList::post();
+    $matched_api_classname = null;
+    foreach ($post_api_classes as $api_class) {
+        if (strtolower((string)$api_class) === $class_name) {
+          $matched_api_classname = $api_class;
+        }
+    }
+    invariant($matched_api_classname !== null, 'No Api class matched the given path');
+
+    $api_class_obj = new $matched_api_classname();
+    $processed_params_wrapped_result = await \HH\Asio\mmkw(
+      $api_class_obj->paramDefinitions(),
+      async ($name, $definition) ==> {
+        $definition->setName($name);
+        return await $definition->genProcessParam(
+          $params->containsKey($name) ? $params[$name] : null,
+        );
+      },
+    );
+
+    $failed_param_errors = $processed_params_wrapped_result
+      ->filter($result ==> $result->isFailed())
+      ->map($result ==> $result->getException()->getMessage());
+    if (!$failed_param_errors->isEmpty()) {
+      throw new Exception('Invalid or missing parameters: '.json_encode($failed_param_errors));
+    }
+
+    $processed_params = $processed_params_wrapped_result
+      ->map($result ==> $result->getResult())
+      ->filter($value ==> $value !== null); // TODO implement a allowNull() flag in param base class
+
+    return await $api_class_obj->genExecute(
+      $node_id,
+      $processed_params->toImmMap()
+    );
   }
 
   private static function parseFieldMap(string $str): ImmMap<string, mixed> {

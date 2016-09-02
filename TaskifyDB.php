@@ -49,6 +49,21 @@ final class TaskifyDB {
       return null;
     }
 
+    public static async function genEdgeExists(
+      int $id1,
+      int $id2,
+      EdgeType $edgeType,
+    ): Awaitable<bool> {
+      $conn = await self::genConnection();
+      $response = await $conn->queryf(
+        'SELECT COUNT(1) FROM edge WHERE id1 = %d AND id2 = %d AND type = %d',
+        $id1,
+        $id2,
+        (int)$edgeType,
+      );
+      return $response->vectorRows()[0][0] > 0;
+    }
+
     public static async function genEdgesForType(
       int $id1,
       EdgeType $edgeType,
@@ -61,5 +76,54 @@ final class TaskifyDB {
           $id1
       );
       return $result->mapRows();
+    }
+
+    public static async function genCreateNode(
+      NodeType $node_type,
+      ImmMap<string, mixed> $fields,
+    ): Awaitable<int> {
+      $conn = await self::genConnection();
+      $table = IDUtil::typeToTable($node_type);
+      $data = json_encode($fields);
+      $res = await $conn->queryf(
+        "INSERT INTO %T (data) VALUES (%s)",
+        $table,
+        $data,
+      );
+      return $res->lastInsertId();
+    }
+
+    public static async function genCreateEdge(
+      EdgeType $edge_type,
+      int $id1,
+      int $id2,
+      ?Map<string, mixed> $data = null,
+    ): Awaitable<void> {
+      $inverse_type = EdgeUtil::getInverse($edge_type);
+      $gens = Vector {
+        self::genEdgeExists($id1, $id2, $edge_type)
+      };
+      if ($inverse_type !== null) {
+        $gens[] = self::genEdgeExists($id2, $id1, $inverse_type);
+      }
+      $results = await \HH\Asio\v($gens);
+      if ($results[0] || ($inverse_type !== null && $results[1])) {
+        throw new Exception('Edge already exists');
+      }
+
+      $json_data = json_encode($data);
+      $conn = await self::genConnection();
+      if ($inverse_type !== null) {
+        await $conn->queryf(
+          'INSERT INTO edge (id1, id2, type, data) VALUES (%d, %d, %d, %s), (%d, %d, %d, %s)',
+          $id1, $id2, (int)$edge_type, $json_data,
+          $id2, $id1, (int)$inverse_type, $json_data
+        );
+      } else {
+        await $conn->queryf(
+          'INSERT INTO edge (id1, id2, type) VALUES (%d, %d, %d, %s)',
+          $id1, $id2, (int)$edge_type, $json_data
+        );
+      }
     }
 }

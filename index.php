@@ -17,16 +17,13 @@ if ($query_string !== '') {
     $params_map[$key] = $value;
   }
 }
-
 if (substr($path, 0, 4) === 'api/') {
   $api_path = substr($path, 4);
   try {
-    // $nodes =  \HH\Asio\join((new UserToTasksEdge(1))->genNodes());
-    // echo '<pre>'.json_encode($nodes, JSON_PRETTY_PRINT).'</pre>';
-    $res = \HH\Asio\join(ApiServer::genResponseJson($api_path, $params_map));
+    $res = \HH\Asio\join(ApiServer::genResponseJson($api_path, new ImmMap($params_map)));
     echo '<pre>'.$res.'</pre>';
-  } catch (Exception $e) {
-    var_dump($e->getMessage());
+  } catch (Exception $e) {//
+    echo $e->getMessage();
   }
 }
 // echo
