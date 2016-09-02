@@ -58,6 +58,7 @@ final class ApiServer {
     $node_id = (int)$node_id;
     $node_typename = IDUtil::idToApiTypename($node_id);
     $class_name = strtolower('api'.$node_typename.$edge_name.'post');
+    $class_name = str_replace('_', '', $class_name);
     $post_api_classes = ApiList::post();
     $matched_api_classname = null;
     foreach ($post_api_classes as $api_class) {
@@ -91,7 +92,7 @@ final class ApiServer {
 
     return await $api_class_obj->genExecute(
       $node_id,
-      $processed_params->toImmMap()
+      $processed_params,
     );
   }
 

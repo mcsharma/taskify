@@ -80,7 +80,7 @@ final class TaskifyDB {
 
     public static async function genCreateNode(
       NodeType $node_type,
-      ImmMap<string, mixed> $fields,
+      Map<string, mixed> $fields,
     ): Awaitable<int> {
       $conn = await self::genConnection();
       $table = IDUtil::typeToTable($node_type);

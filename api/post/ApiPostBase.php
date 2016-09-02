@@ -7,6 +7,6 @@ abstract class ApiPostBase {
 
   abstract public function genExecute(
     int $node_id,
-    ImmMap<string, mixed> $params,
+    Map<string, mixed> $params,
   ): Awaitable<Map<string, mixed>>;
 }
