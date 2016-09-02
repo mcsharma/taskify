@@ -1,7 +1,6 @@
 <?hh // strict
 
 require_once('api/fields/ApiNonEdgeField.php');
-require_once('api/edges/ApiUserTasksEdge.php');
 require_once('api/fields/ApiNode.php');
 
 abstract final class ApiField {

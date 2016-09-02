@@ -2,6 +2,8 @@
 
 require_once('api/fields/ApiNode.php');
 require_once('api/fields/ApiFieldBase.php');
+require_once('api/edges/ApiUserTasksEdge.php');
+require_once('api/edges/ApiUserCreatedTasksEdge.php');
 
 final class ApiUserNode extends ApiNode<User> {
 
@@ -18,6 +20,7 @@ final class ApiUserNode extends ApiNode<User> {
       'name' => ApiField::string('getName'),
       'updated_time' => ApiField::string('getUpdatedTime'),
       'tasks' => ApiField::edge(ApiUserTasksEdge::class),
+      'created_tasks' => ApiField::edge(ApiUserCreatedTasksEdge::class),
     };
   }
 
