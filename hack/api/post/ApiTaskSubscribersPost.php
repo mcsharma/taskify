@@ -1,14 +1,14 @@
 <?hh // strict
 
 require_once('ApiPostBase.php');
-require_once('hack/api/params/ApiNodeIDParam.php');
 require_once('hack/api/params/ApiParamBase.php');
+require_once('hack/api/params/ApiNodeIDParam.php');
 
-final class ApiTaskTagsPost extends ApiPostBase {
+final class ApiTaskSubscribersPost extends ApiPostBase {
 
   public function paramDefinitions(): ImmMap<string, ApiParamBase> {
     return ImmMap {
-      'tag_id' => (new ApiNodeIDParam())->required(),
+      'subscriber_id' => (new ApiNodeIDParam())->required(),
     };
   }
 
@@ -16,14 +16,14 @@ final class ApiTaskTagsPost extends ApiPostBase {
     int $task_id,
     Map<string, mixed> $params,
   ): Awaitable<Map<string, mixed>> {
-    $tag_id = (int)$params['tag_id'];
+    $subscriber_id = (int)$params['subscriber_id'];
     await TaskifyDB::genCreateEdge(
-      EdgeType::TASK_TO_TAG,
+      EdgeType::TASK_TO_SUBSCRIBER,
       $task_id,
-      $tag_id,
+      $subscriber_id,
     );
     return Map {
-      'id' => $tag_id,
+      'id' => $subscriber_id,
     };
   }
 }

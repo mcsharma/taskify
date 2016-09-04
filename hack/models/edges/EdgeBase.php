@@ -19,6 +19,7 @@ abstract class EdgeBase<T as NodeBase> {
     $nodes = Map {};
     foreach ($edges as $edge) {
       $id2 = (int)$edge['id2'];
+      // TODO avoid await in a loop
       $node = await $node_type::gen($id2);
       $nodes[$id2] = $node;
     }

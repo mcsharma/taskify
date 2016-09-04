@@ -37,6 +37,9 @@ abstract class ApiNode<+T as NodeBase> extends ApiNonEdgeField {
       }
     }
     foreach ($fields as $field => $fields_tree) {
+      if (!$field_defs->containsKey($field)) {
+        throw new Exception(sprintf("Requested non-existing field '%s'", $field));
+      }
       $field_obj = $field_defs[$field];
       $field_obj->setName($field)->setParentNode($node);
       if ($field_obj instanceof ApiNode || $field_obj instanceof ApiEdge) {
@@ -59,8 +62,11 @@ abstract class ApiNode<+T as NodeBase> extends ApiNonEdgeField {
           );
         }
       }
+      // TODO avoid await in a loop
       $result = await $field_obj->genResult();
-      $response[$field] = $result;
+      if ($result !== null) {
+        $response[$field] = $result;
+      }
     }
     return $response;
   }

@@ -21,7 +21,6 @@ final class ApiTagNode extends ApiNode<Tag> {
       'caption' => ApiField::string('getCaption'),
       'description' => ApiField::string('getDescription'),
       'creator' => ApiField::node('getCreatorID', ApiUserNode::class),
-      'tags' => ApiField::edge(ApiTaskTagsEdge::class),
     };
   }
 
