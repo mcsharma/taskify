@@ -20,6 +20,7 @@ final class ApiTaskNode extends ApiNode<Task> {
       'title' => ApiField::string('getTitle'),
       'description' => ApiField::string('getDescription'),
       'owner' => ApiField::node('getOwnerID', ApiUserNode::class),
+      'priority' => ApiField::string('getPriority')
     };
   }
 

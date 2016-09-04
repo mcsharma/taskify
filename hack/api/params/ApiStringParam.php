@@ -11,7 +11,7 @@ final class ApiStringParam extends ApiParamBase {
     return $this;
   }
 
-  protected async function genProcess(?string $value): Awaitable<?string> {
+  protected async function genProcess(string $value): Awaitable<?string> {
     if (!$this->allowEmpty) {
       $value = $value === '' ? null : $value;
       if ($this->isRequired) {

@@ -7,6 +7,7 @@ final class Task extends NodeBase {
   private string $title;
   private ?string $description;
   private ?int $ownerID;
+  private Priority $priority;
 
   public function __construct(Map<string, string> $node) {
     parent::__construct($node);
@@ -14,6 +15,7 @@ final class Task extends NodeBase {
     $this->title = $data['title'];
     $this->description = array_key_exists('description', $data) ? $data['description'] : null;
     $this->ownerID = array_key_exists('owner_id', $data) ? $data['owner_id']: null;
+    $this->priority = array_key_exists('priority', $data) ? Priority::assert($data['priority']) : Priority::UNSPECIFIED;
   }
 
   public function getTitle(): string {
@@ -26,5 +28,9 @@ final class Task extends NodeBase {
 
   public function getOwnerID(): ?int {
     return $this->ownerID;
+  }
+
+  public function getPriority(): Priority {
+    return $this->priority;
   }
 }

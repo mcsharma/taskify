@@ -19,7 +19,7 @@ abstract class ApiParamBase {
     return $value;
   }
 
-  abstract protected function genProcess(?string $value): Awaitable<mixed>;
+  abstract protected function genProcess(string $value): Awaitable<mixed>;
 
   public function required(): this {
     $this->isRequired = true;

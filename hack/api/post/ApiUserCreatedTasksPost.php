@@ -3,6 +3,8 @@
 require_once('ApiPostBase.php');
 require_once('hack/api/params/ApiStringParam.php');
 require_once('hack/api/params/ApiNodeIDParam.php');
+require_once('hack/api/params/ApiStringEnumParam.php');
+require_once('hack/metadata/Priority.php');
 
 final class ApiUserCreatedTasksPost extends ApiPostBase {
 
@@ -11,6 +13,7 @@ final class ApiUserCreatedTasksPost extends ApiPostBase {
       'title' => (new ApiStringParam())->required(),
       'description' => new ApiStringParam(),
       'owner_id' => new ApiNodeIDParam(),
+      'priority' => new ApiStringEnumParam(Priority::getValues()),
     };
   }
 
