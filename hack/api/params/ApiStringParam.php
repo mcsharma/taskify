@@ -5,9 +5,15 @@ require_once('ApiParamBase.php');
 final class ApiStringParam extends ApiParamBase {
 
   private bool $allowEmpty = false;
+  private bool $disableURLDecoding = false;
 
   public function allowEmpty(): this {
     $this->allowEmpty = true;
+    return $this;
+  }
+
+  public function disableURLDecoding(): this {
+    $this->disableURLDecoding = true;
     return $this;
   }
 
@@ -20,6 +26,9 @@ final class ApiStringParam extends ApiParamBase {
           'Parameter is required to be a non-empty string',
         );
       }
+    }
+    if ($value !== null && !$this->disableURLDecoding) {
+      $value = urldecode($value);
     }
     return $value;
   }

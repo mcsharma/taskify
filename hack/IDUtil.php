@@ -14,6 +14,11 @@ final class IDUtil {
         NodeType::TASK => 'Task',
     };
 
+    private static Map<NodeType, (int, int)> $nodeTypeToRange = Map {
+        NodeType::USER => tuple(1, 100000000000000),
+        NodeType::TASK => tuple(100000000000001, 200000000000000),
+    };
+
     public static function idToTable(int $id): string {
         return self::typeToTable(self::idToType($id));
     }
@@ -31,12 +36,7 @@ final class IDUtil {
     }
 
     public static function idToTypeNullable(int $id): ?NodeType {
-        static $nodeTypeToRange = Map {
-            NodeType::USER => tuple(1, 100000000000000),
-            NodeType::TASK => tuple(100000000000001, 200000000000000),
-        };
-
-        foreach ($nodeTypeToRange as $node_type => $range) {
+        foreach (self::$nodeTypeToRange as $node_type => $range) {
             if ($id >= $range[0] && $id <= $range[1]) {
                 return $node_type;
             }
