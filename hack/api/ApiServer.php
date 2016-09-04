@@ -34,15 +34,7 @@ final class ApiServer {
       ? self::parseFieldMap($params['fields'])
       : ImmMap {};
 
-    $api_node_class = null;
-    switch ($type) {
-      case NodeType::USER:
-        $api_node_class = ApiUserNode::class;
-        break;
-      case NodeType::TASK:
-        $api_node_class = ApiTaskNode::class;
-        break;
-    }
+    $api_node_class = IDUtil::idToApiNodeClass($node_id);
 
     $api_node = new $api_node_class();
     await $api_node

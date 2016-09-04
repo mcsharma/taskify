@@ -15,6 +15,7 @@ abstract class ApiEdge<T as NodeBase> extends ApiFieldBase {
     $parent_node = $this->parentNode();
     invariant($parent_node !== null, 'parent must have been set');
     $edge_class = $this->getEdgeClass();
+    // TODO apply limit from param here
     $nodes = await (new $edge_class($parent_node->getID()))->genNodes();
     $api_node_class = $this->getTargetNodeClass();
     $nodes_data = Vector {};

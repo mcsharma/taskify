@@ -3,7 +3,7 @@
 require_once('ApiNonEdgeField.php');
 require_once('ApiEdge.php');
 
-abstract class ApiNode<T as NodeBase> extends ApiNonEdgeField {
+abstract class ApiNode<+T as NodeBase> extends ApiNonEdgeField {
 
   private ImmMap<string, mixed> $fieldsTree = ImmMap {};
 
