@@ -1,7 +1,7 @@
 <?hh // strict
 
-require_once('api/fields/ApiNonEdgeField.php');
-require_once('api/fields/ApiNode.php');
+require_once('hack/api/fields/ApiNonEdgeField.php');
+require_once('hack/api/fields/ApiNode.php');
 
 abstract final class ApiField {
 

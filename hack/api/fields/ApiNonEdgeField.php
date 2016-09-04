@@ -1,6 +1,6 @@
 <?hh
 
-require_once('api/fields/ApiFieldBase.php');
+require_once('ApiFieldBase.php');
 
 class ApiNonEdgeField extends ApiFieldBase {
 

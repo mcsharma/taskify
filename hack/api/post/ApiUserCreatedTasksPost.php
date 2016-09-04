@@ -1,8 +1,8 @@
 <?hh // strict
 
 require_once('ApiPostBase.php');
-require_once('api/params/ApiStringParam.php');
-require_once('api/params/ApiNodeIDParam.php');
+require_once('hack/api/params/ApiStringParam.php');
+require_once('hack/api/params/ApiNodeIDParam.php');
 
 final class ApiUserCreatedTasksPost extends ApiPostBase {
 

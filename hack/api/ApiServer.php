@@ -1,8 +1,10 @@
 <?hh // strict
 
-require_once('api/nodes/ApiUserNode.php');
-require_once('api/nodes/ApiTaskNode.php');
+require_once('nodes/ApiUserNode.php');
+require_once('nodes/ApiTaskNode.php');
+require_once('hack/IDUtil.php');
 require_once('ApiList.php');
+
 
 final class ApiServer {
 

@@ -1,10 +1,6 @@
 <?hh
 
-require_once('TaskifyDB.php');
-require_once('api/ApiServer.php');
-require_once('models/User.php');
-require_once('models/Task.php');
-require_once('models/edges/UserToTasksEdge.php');
+require_once('hack/api/ApiServer.php');
 
 $path = trim($_SERVER['PATH_INFO'], '/');
 $query_string = $_SERVER['QUERY_STRING'];

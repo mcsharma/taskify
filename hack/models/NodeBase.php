@@ -1,5 +1,7 @@
 <?hh // strict
 
+require_once('hack/taskifyDB.php');
+
 <<__ConsistentConstruct>>
 abstract class NodeBase {
     private int $id;
