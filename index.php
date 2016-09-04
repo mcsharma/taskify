@@ -27,12 +27,22 @@ if (substr($path, 0, 4) === 'api/') {
     echo $e->getMessage();
   }
 }
-// echo
-// '<html>
-// <head>
-//   <script type="text/javascript" src="public/bundle.js"></script>
-// </head>
-// <body>
-//   <div id="root"></div>
-// </body>
-// </html>';
+echo
+'<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Taskify</title>
+    </head>
+    <body>
+        <div id="root-container"></div>
+
+        <!-- Dependencies -->
+
+        <!-- Main -->
+        <link rel="stylesheet" href="./public/style.css"></link>
+        <script src="./public/node_modules/react/dist/react.js"></script>
+        <script src="./public/node_modules/react-dom/dist/react-dom.js"></script>
+        <script src="./public/dist/bundle.js"></script>
+    </body>
+</html>';

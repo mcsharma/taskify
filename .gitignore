@@ -1,5 +1,8 @@
-public/node_modules
+npm-debug.log
 public/bundle.js
+public/dist
+public/typings
+public/node_modules
 public/npm-debug.log
 .idea/
 www.pid

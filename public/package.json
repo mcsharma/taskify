@@ -2,16 +2,18 @@
   "name": "taskify",
   "version": "1.0.0",
   "description": "A task management tool!",
-  "main": "index.js",
+  "main": "./dist/bundle.js",
+  "dependencies": {
+    "react": "^15.3.1",
+    "react-dom": "^15.3.1"
+  },
+  "devDependencies": {
+    "source-map-loader": "^0.1.5",
+    "ts-loader": "^0.8.2"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "babel-preset-react": "^6.11.1",
-    "babelify": "^7.3.0",
-    "react": "^15.2.1",
-    "react-dom": "^15.2.1"
-  }
+  "author": "mcsharma1990@gmail.com",
+  "license": "ISC"
 }
