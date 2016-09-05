@@ -4,6 +4,8 @@ require('NodeType.php');
 require_once ('hack/api/nodes/ApiTagNode.php');
 require_once ('hack/api/nodes/ApiUserNode.php');
 require_once ('hack/api/nodes/ApiTaskNode.php');
+require_once ('hack/api/nodes/ApiActivityNode.php');
+require_once ('hack/models/Activity.php');
 
 final class IDUtil {
 
@@ -11,18 +13,21 @@ final class IDUtil {
         NodeType::USER => 'user',
         NodeType::TASK => 'task',
         NodeType::TAG => 'tag',
+        NodeType::ACTIVITY => 'activity',
     };
 
     private static Map<NodeType, string> $nodeTypeToApiTypename = Map {
         NodeType::USER => 'User',
         NodeType::TASK => 'Task',
         NodeType::TAG => 'Tag',
+        NodeType::ACTIVITY => 'Activity',
     };
 
     private static Map<NodeType, (int, int)> $nodeTypeToRange = Map {
         NodeType::USER => tuple(1, 100000000000000),
         NodeType::TASK => tuple(100000000000001, 200000000000000),
         NodeType::TAG => tuple(200000000000001, 300000000000000),
+        NodeType::ACTIVITY => tuple(300000000000001, 400000000000000),
     };
 
     public static function idToTable(int $id): string {
@@ -60,7 +65,7 @@ final class IDUtil {
       return self::idToTypeNullable($id) !== null;
     }
 
-    public static function idToNodeClass(int $id): classname<NodeBase> {
+    public static function idToNodeLoaderClass(int $id): classname<NodeBase> {
       $type = self::idToType($id);
       switch ($type) {
         case NodeType::USER:
@@ -69,19 +74,23 @@ final class IDUtil {
           return Task::class;
         case NodeType::TAG:
           return Tag::class;
-
+        case NodeType::ACTIVITY:
+          return Activity::class;
       }
     }
 
-    public static function idToApiNodeClass(int $id): classname<ApiNode<NodeBase>> {
-      $type = self::idToType($id);
-      switch ($type) {
-        case NodeType::USER:
+    public static function nodeClassToApiNodeClass(
+      classname<NodeBase> $node_class,
+    ): classname<ApiNode<NodeBase>> {
+      switch ($node_class) {
+        case User::class:
           return ApiUserNode::class;
-        case NodeType::TASK:
+        case Task::class:
           return ApiTaskNode::class;
-        case NodeType::TAG:
+        case Tag::class:
           return ApiTagNode::class;
+        case Activity::class:
+          return ApiActivityNode::class;
       }
     }
 }

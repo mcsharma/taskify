@@ -32,13 +32,26 @@ abstract class NodeBase {
         return $this->updatedTime;
     }
 
+   /**
+    * Call this function to load the Hack object model underlying the given ID.
+    * Like, Task::gen() will load Task object.
+    */
     public static async function gen(int $id): Awaitable<this> {
       $node = await TaskifyDB::genNode($id);
+      return static::load($node);
+    }
+
+    /**
+     * Override in derived class if you need some custom logic, for example,
+     * You might want the loaded object to be of a particiular subclass of the
+     * class that is calling the gen() method.
+     */
+    protected static function load(Map<string, string> $node): this {
       return new static($node);
     }
 
     public static async function genDynamic(int $id): Awaitable<NodeBase> {
-      $class = IDUtil::idToNodeClass($id);
+      $class = IDUtil::idToNodeLoaderClass($id);
       return await $class::gen($id);
     }
 }

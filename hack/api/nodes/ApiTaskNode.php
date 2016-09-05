@@ -6,6 +6,7 @@ require_once('hack/api/fields/ApiField.php');
 require_once('hack/models/Task.php');
 require_once('hack/api/edges/ApiTaskTagsEdge.php');
 require_once('hack/api/edges/ApiTaskSubscribersEdge.php');
+require_once('hack/api/edges/ApiTaskActivitiesEdge.php');
 
 final class ApiTaskNode extends ApiNode<Task> {
 
@@ -19,12 +20,15 @@ final class ApiTaskNode extends ApiNode<Task> {
       'id' => ApiField::string('getIDString'),
       'created_time' => ApiField::string('getCreatedTime'),
       'updated_time' => ApiField::string('getUpdatedTime'),
+      'status' => ApiField::string('getStatus'),
       'title' => ApiField::string('getTitle'),
       'description' => ApiField::string('getDescription'),
+      'creator' => ApiField::node('getCreatorID', ApiUserNode::class),
       'owner' => ApiField::node('getOwnerID', ApiUserNode::class),
       'priority' => ApiField::string('getPriority'),
       'tags' => ApiField::edge(ApiTaskTagsEdge::class),
       'subscribers' => ApiField::edge(ApiTaskSubscribersEdge::class),
+      'activities' => ApiField::edge(ApiTaskActivitiesEdge::class),
     };
   }
 

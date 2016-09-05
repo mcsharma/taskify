@@ -9,6 +9,8 @@ class ApiNonEdgeField extends ApiFieldBase {
   public async function genResult(): Awaitable<mixed> {
     $parent = $this->parentNode();
     $method = $this->methodName;
+    // TODO allow ApiNode to set field object directly instead of coming from
+    // genResult(). In that case parent should be kept null
     $node = $method !== null ? $parent->$method() : $parent;
     if ($node instanceof Awaitable) {
       $node = await $node;

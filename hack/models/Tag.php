@@ -10,6 +10,7 @@ final class Tag extends NodeBase {
 
   public function __construct(Map<string, string> $node) {
     parent::__construct($node);
+    // TODO move json decoding logic into NodeBase
     $data = json_decode($node['data'], true /*return array instead*/);
     $this->caption = $data['caption'];
     $this->description = array_key_exists('description', $data) ? $data['description'] : null;

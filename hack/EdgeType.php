@@ -9,6 +9,8 @@ enum EdgeType: int {
     TAG_TO_TASK = 6;
     TASK_TO_SUBSCRIBER = 7;
     USER_TO_SUBSCRIBED_TASK = 8;
+    TASK_TO_ACTIVITY = 9;
+    ACTIVITY_TO_TASK = 10;
 }
 
 abstract final class EdgeUtil {
@@ -25,6 +27,9 @@ abstract final class EdgeUtil {
 
     EdgeType::TASK_TO_SUBSCRIBER => EdgeType::USER_TO_SUBSCRIBED_TASK,
     EdgeType::USER_TO_SUBSCRIBED_TASK => EdgeType::TASK_TO_SUBSCRIBER,
+
+    EdgeType::TASK_TO_ACTIVITY => EdgeType::ACTIVITY_TO_TASK,
+    EdgeType::ACTIVITY_TO_TASK => EdgeType::TASK_TO_ACTIVITY,
   };
 
   public static function getInverse(EdgeType $edgeType): ?EdgeType {

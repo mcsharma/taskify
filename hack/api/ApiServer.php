@@ -34,8 +34,8 @@ final class ApiServer {
       ? self::parseFieldMap($params['fields'])
       : ImmMap {};
 
-    $api_node_class = IDUtil::idToApiNodeClass($node_id);
-
+    $node = await NodeBase::genDynamic($node_id);
+    $api_node_class = IDUtil::nodeClassToApiNodeClass(get_class($node));
     $api_node = new $api_node_class();
     await $api_node
       ->setFieldsTree($fields)
