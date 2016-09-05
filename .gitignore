@@ -6,3 +6,4 @@ public/node_modules
 public/npm-debug.log
 .idea/
 www.pid
+*.DS_Store

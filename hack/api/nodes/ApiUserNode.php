@@ -4,6 +4,7 @@ require_once('hack/api/fields/ApiNode.php');
 require_once('hack/api/fields/ApiFieldBase.php');
 require_once('hack/api/edges/ApiUserTasksEdge.php');
 require_once('hack/api/edges/ApiUserCreatedTasksEdge.php');
+require_once('hack/api/edges/ApiUserActivitiesEdge.php');
 require_once('hack/models/User.php');
 
 final class ApiUserNode extends ApiNode<User> {
@@ -22,6 +23,7 @@ final class ApiUserNode extends ApiNode<User> {
       'updated_time' => ApiField::string('getUpdatedTime'),
       'tasks' => ApiField::edge(ApiUserTasksEdge::class),
       'created_tasks' => ApiField::edge(ApiUserCreatedTasksEdge::class),
+      'activities' => ApiField::edge(ApiUserActivitiesEdge::class),
     };
   }
 
