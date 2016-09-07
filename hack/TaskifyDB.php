@@ -93,6 +93,28 @@ final class TaskifyDB {
       return $res->lastInsertId();
     }
 
+
+    public static async function genUpdateNode(
+      int $node_id,
+      Map<string, mixed> $fields,
+    ): Awaitable<void> {
+      echo $node_id;
+      $conn = await self::genConnection();
+      $table = IDUtil::idToTable($node_id);
+      // foreach ($fields as $name => $field) {
+      //
+      // }
+      if ($fields->contains('title'))  {
+        $res = await $conn->queryf(
+          "UPDATE %T SET data = JSON_SET(data, %s, %s) WHERE id = %d",
+          $table,
+          "$.title",
+          (string)$fields['title'],
+          $node_id,
+        );
+      }
+    }
+
     public static async function genCreateEdge(
       EdgeType $edge_type,
       int $id1,

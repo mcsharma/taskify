@@ -1,7 +1,7 @@
 <?hh // strict
 
 require_once ('NodeBase.php');
-require_once ('hack/metadata/TaskStatus.php');
+require_once ('metadata/TaskStatus.php');
 
 final class Task extends NodeBase {
 

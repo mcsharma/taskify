@@ -1,9 +1,9 @@
 <?hh // strict
 
-require_once('hack/api/fields/ApiNode.php');
-require_once('hack/api/fields/ApiFieldBase.php');
-require_once('hack/api/fields/ApiField.php');
-require_once('hack/models/Activity.php');
+require_once('api/fields/ApiNode.php');
+require_once('api/fields/ApiFieldBase.php');
+require_once('api/fields/ApiField.php');
+require_once('models/Activity.php');
 
 final class ApiActivityNode extends ApiNode<Activity> {
 

@@ -1,12 +1,12 @@
 <?hh // strict
 
-require_once('hack/api/fields/ApiNode.php');
-require_once('hack/api/fields/ApiFieldBase.php');
-require_once('hack/api/fields/ApiField.php');
-require_once('hack/models/Task.php');
-require_once('hack/api/edges/ApiTaskTagsEdge.php');
-require_once('hack/api/edges/ApiTaskSubscribersEdge.php');
-require_once('hack/api/edges/ApiTaskActivitiesEdge.php');
+require_once('api/fields/ApiNode.php');
+require_once('api/fields/ApiFieldBase.php');
+require_once('api/fields/ApiField.php');
+require_once('models/Task.php');
+require_once('api/edges/ApiTaskTagsEdge.php');
+require_once('api/edges/ApiTaskSubscribersEdge.php');
+require_once('api/edges/ApiTaskActivitiesEdge.php');
 
 final class ApiTaskNode extends ApiNode<Task> {
 

@@ -1,6 +1,6 @@
 <?hh // strict
 
-require_once('hack/taskifyDB.php');
+require_once('taskifyDB.php');
 
 <<__ConsistentConstruct>>
 abstract class NodeBase {

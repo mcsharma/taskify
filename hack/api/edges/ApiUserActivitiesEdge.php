@@ -1,8 +1,8 @@
 <?hh // strict
 
-require_once('hack/api/fields/ApiEdge.php');
-require_once('hack/models/Activity.php');
-require_once('hack/models/edges/UserToActivitiesEdge.php');
+require_once('api/fields/ApiEdge.php');
+require_once('models/Activity.php');
+require_once('models/edges/UserToActivitiesEdge.php');
 
 final class ApiUserActivitiesEdge extends ApiEdge<Activity> {
 

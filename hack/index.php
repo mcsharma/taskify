@@ -1,6 +1,6 @@
 <?hh
 
-require_once('hack/api/ApiServer.php');
+require_once('api/ApiServer.php');
 
 $path = trim($_SERVER['PATH_INFO'], '/');
 $query_string = $_SERVER['QUERY_STRING'];
@@ -22,23 +22,6 @@ if (substr($path, 0, 4) === 'api/') {
   } catch (Exception $e) {
     echo $e->getMessage();
   }
+} else {
+  echo 'Taskify API Server';
 }
-echo
-'<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8" />
-        <title>Taskify</title>
-    </head>
-    <body>
-        <div id="root-container"></div>
-
-        <!-- Dependencies -->
-
-        <!-- Main -->
-        <link rel="stylesheet" type="text/css" href="./public/dist/bundle.css"></link>
-        <script src="./public/node_modules/react/dist/react.js"></script>
-        <script src="./public/node_modules/react-dom/dist/react-dom.js"></script>
-        <script src="./public/dist/bundle.js"></script>
-    </body>
-</html>';

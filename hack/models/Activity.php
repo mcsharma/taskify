@@ -1,6 +1,6 @@
 <?hh // strict
 
-require_once('hack/metadata/TaskMetadata.php');
+require_once('metadata/TaskMetadata.php');
 
 final class Activity extends NodeBase {
 

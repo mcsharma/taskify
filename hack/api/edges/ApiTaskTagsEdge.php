@@ -1,8 +1,8 @@
 <?hh // strict
 
-require_once('hack/api/fields/ApiEdge.php');
-require_once('hack/models/edges/TaskToTagsEdge.php');
-require_once('hack/api/nodes/ApiTagNode.php');
+require_once('api/fields/ApiEdge.php');
+require_once('models/edges/TaskToTagsEdge.php');
+require_once('api/nodes/ApiTagNode.php');
 
 final class ApiTaskTagsEdge extends ApiEdge<Tag> {
 

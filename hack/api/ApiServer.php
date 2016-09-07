@@ -2,9 +2,8 @@
 
 require_once('nodes/ApiUserNode.php');
 require_once('nodes/ApiTaskNode.php');
-require_once('hack/IDUtil.php');
+require_once('IDUtil.php');
 require_once('ApiList.php');
-
 
 final class ApiServer {
 
@@ -48,7 +47,9 @@ final class ApiServer {
     string $path,
     ImmMap<string, string> $params,
   ): Awaitable<Map<string, mixed>> {
-    list($node_id, $edge_name) = explode('/', $path);
+    $path_tokens = explode('/', $path);
+    $node_id = array_shift($path_tokens);
+    $edge_name = count($path_tokens) > 0 ? array_shift($path_tokens) : '';
     $node_id = (int)$node_id;
     $node_typename = IDUtil::idToApiTypename($node_id);
     $class_name = strtolower('api'.$node_typename.$edge_name.'post');

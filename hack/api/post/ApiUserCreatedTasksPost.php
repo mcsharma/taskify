@@ -1,16 +1,18 @@
 <?hh // strict
 
 require_once('ApiPostBase.php');
-require_once('hack/api/params/ApiStringParam.php');
-require_once('hack/api/params/ApiNodeIDParam.php');
-require_once('hack/api/params/ApiStringEnumParam.php');
-require_once('hack/metadata/Priority.php');
+require_once('api/params/ApiStringParam.php');
+require_once('api/params/ApiNodeIDParam.php');
+require_once('api/params/ApiStringEnumParam.php');
+require_once('metadata/Priority.php');
 
 final class ApiUserCreatedTasksPost extends ApiPostBase {
 
   public function paramDefinitions(): ImmMap<string, ApiParamBase> {
     return ImmMap {
       'title' => (new ApiStringParam())->required(),
+      'status' => (new ApiStringEnumParam(TaskStatus::getValues()))
+        ->defaultValue(TaskStatus::OPEN),
       'description' => new ApiStringParam(),
       'owner_id' => new ApiNodeIDParam(),
       'priority' => new ApiStringEnumParam(Priority::getValues()),
