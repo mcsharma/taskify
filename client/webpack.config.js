@@ -2,8 +2,8 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 module.exports = {
     entry: "./src/index.tsx",
     output: {
-        path: "./dist",
-        filename: "bundle.js",
+        path: "./public",
+        filename: "js/bundle.js",
     },
 
     // Enable sourcemaps for debugging webpack's output.
@@ -42,11 +42,12 @@ module.exports = {
     // This is important because it allows us to avoid bundling all of our
     // dependencies, which allows browsers to cache those libraries between builds.
     externals: {
-        "react": "React",
-        "react-dom": "ReactDOM"
+// TODO split chunk lib code
+                   //        "react": "React",
+//        "react-dom": "ReactDOM"
     },
     plugins: [
-      new ExtractTextPlugin("bundle.css")
+      new ExtractTextPlugin("css/bundle.css")
     ]
 };
 

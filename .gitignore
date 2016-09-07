@@ -1,9 +1,9 @@
 npm-debug.log
-public/bundle.js
-public/dist
-public/typings
-public/node_modules
-public/npm-debug.log
+client/public/js
+client/public/css
+client/typings
+client/node_modules
+client/npm-debug.log
 .idea/
 www.pid
 *.DS_Store
