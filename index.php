@@ -36,7 +36,7 @@ echo
         <!-- Dependencies -->
 
         <!-- Main -->
-        <link rel="stylesheet" href="./public/style.css"></link>
+        <link rel="stylesheet" type="text/css" href="./public/dist/bundle.css"></link>
         <script src="./public/node_modules/react/dist/react.js"></script>
         <script src="./public/node_modules/react-dom/dist/react-dom.js"></script>
         <script src="./public/dist/bundle.js"></script>
