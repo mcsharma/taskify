@@ -2,7 +2,8 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 module.exports = {
     entry: "./src/index.tsx",
     output: {
-        filename: "./dist/bundle.js",
+        path: "./dist",
+        filename: "bundle.js",
     },
 
     // Enable sourcemaps for debugging webpack's output.
@@ -45,7 +46,7 @@ module.exports = {
         "react-dom": "ReactDOM"
     },
     plugins: [
-      new ExtractTextPlugin("./dist/bundle.css")
+      new ExtractTextPlugin("bundle.css")
     ]
 };
 
