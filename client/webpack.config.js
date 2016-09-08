@@ -3,7 +3,7 @@ var webpack = require('webpack');
 
 module.exports = {
     entry: {
-        app:  "./src/app.tsx",
+        app:  "./src/app",
         lib: [
             "react", 
             "react-dom"
@@ -47,7 +47,10 @@ module.exports = {
 
     plugins: [
       new ExtractTextPlugin("css/bundle.css"),
-      new webpack.optimize.CommonsChunkPlugin("lib", "js/lib.bundle.js")
+      new webpack.optimize.CommonsChunkPlugin({
+          name: "lib", // Name of this commons chunk, not related to entry.lib
+          filename: "js/lib.bundle.js",
+      })
     ]
 };
 

@@ -2,7 +2,9 @@
     "compilerOptions": {
         "sourceMap": true,
         "noImplicitAny": true,
+        "jsx": "react",
         "target": "es5",
-        "jsx": "react"
+        "lib": ["dom", "es5", "es2015.promise"] // decides what language features typings
+                    // should be included by default.
      }
 }

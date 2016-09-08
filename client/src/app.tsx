@@ -1,8 +1,7 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { Root } from "./components/Root";
-
-require('./css/app.less');
+import './css/app.less';
 
 ReactDOM.render(
     <Root />,
