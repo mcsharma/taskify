@@ -1,9 +1,17 @@
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var webpack = require('webpack');
+
 module.exports = {
-    entry: "./src/index.tsx",
+    entry: {
+        app:  "./src/app.tsx",
+        lib: [
+            "react", 
+            "react-dom"
+        ]
+    },
     output: {
         path: "./public",
-        filename: "js/bundle.js",
+        filename: "js/[name].bundle.js",
     },
 
     // Enable sourcemaps for debugging webpack's output.
@@ -37,17 +45,9 @@ module.exports = {
         ]
     },
 
-    // When importing a module whose path matches one of the following, just
-    // assume a corresponding global variable exists and use that instead.
-    // This is important because it allows us to avoid bundling all of our
-    // dependencies, which allows browsers to cache those libraries between builds.
-    externals: {
-// TODO split chunk lib code
-                   //        "react": "React",
-//        "react-dom": "ReactDOM"
-    },
     plugins: [
-      new ExtractTextPlugin("css/bundle.css")
+      new ExtractTextPlugin("css/bundle.css"),
+      new webpack.optimize.CommonsChunkPlugin("lib", "js/lib.bundle.js")
     ]
 };
 
