@@ -40,7 +40,13 @@ final class ApiServer {
       ->setFieldsTree($fields)
       ->genSetRootNodeID($node_id);
 
-    return await $api_node->genResult();
+    $res = await $api_node->genResult();
+    if ($res === null) {
+      $res = Map {
+        "error" => "Invalid object ID",
+      };
+    }
+    return $res;
   }
 
   private static async function genProcessPostRequest(

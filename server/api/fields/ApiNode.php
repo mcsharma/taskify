@@ -20,8 +20,11 @@ abstract class ApiNode<+T as NodeBase> extends ApiNonEdgeField {
     $this->setParentNode($node);
   }
 
-  final public async function genResult(): Awaitable<Map<string, mixed>> {
+  final public async function genResult(): Awaitable<?Map<string, mixed>> {
     $res = await parent::genResult();
+    if ($res === null) {
+      return null;
+    }
     $node = $res;
     if (is_int($res)) {
       $node_class = $this->getNodeClass();
