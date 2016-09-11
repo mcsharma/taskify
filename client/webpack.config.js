@@ -3,10 +3,12 @@ var webpack = require('webpack');
 
 module.exports = {
     entry: {
-        app:  "./src/app",
+        app:  "./src/js/app",
         lib: [
+            "axios",
             "react", 
-            "react-dom"
+            "react-dom",
+            "lodash"
         ]
     },
     output: {

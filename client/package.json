@@ -4,8 +4,11 @@
   "description": "A task management tool!",
   "main": "./dist/bundle.js",
   "dependencies": {
+    "@types/lodash": "^4.14.34",
     "@types/react": "^0.14.34",
     "@types/react-dom": "^0.14.16",
+    "axios": "^0.14.0",
+    "lodash": "^4.15.0",
     "react": "^15.3.1",
     "react-dom": "^15.3.1"
   },
