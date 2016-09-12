@@ -8,6 +8,7 @@
     "@types/react": "^0.14.34",
     "@types/react-dom": "^0.14.16",
     "axios": "^0.14.0",
+    "bootstrap": "^3.3.7",
     "lodash": "^4.15.0",
     "react": "^15.3.1",
     "react-dom": "^15.3.1"

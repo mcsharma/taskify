@@ -5,9 +5,13 @@ export class Root extends React.Component<{}, {}> {
     render() {
         return (
             <div className="root">
-                <div className="topBar"></div>
-                <div className="sideBar"></div>
-                <TaskPanel userID={1} />
+                <div className="top-bar"></div>
+                <div className="content">
+                    <div className="side-bar"></div>
+                    <div className="main-content">
+                        <TaskPanel userID={1}/>
+                    </div>
+                </div>
             </div>
         );
     }

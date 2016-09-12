@@ -7,7 +7,7 @@ interface Props {
 
 interface State {}
 
-export default class TaskRow extends React.Component<Props, State> {
+export default class TaskDetail extends React.Component<Props, State> {
 
     constructor(props: Props) {
         super(props);
@@ -17,11 +17,10 @@ export default class TaskRow extends React.Component<Props, State> {
     public render() {
         let task = this.props.task;
         return (
-            <div>
-                <span>{task.getOwner()!.getName()}</span>
-                <span>{task.getPriority()}</span>
-                <span>{task.getTitle()}</span>
-                <span>{task.getUpdatedTime()}</span>
+            <div className="task-detail">
+                <div className="task-title">{task.getTitle()}</div>
+                    <div>Owner: {task.getOwner()!.getName()}</div>
+                    <div>Priority: {task.getPriority()}</div>
             </div>
         );
     }

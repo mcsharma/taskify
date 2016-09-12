@@ -8,7 +8,7 @@ export interface INode {
     updated_time?: string;
 }
 
-interface IEdge<T extends INode> {
+export interface IEdge<T extends INode> {
     total_count: number;
     nodes: T[];
 }
@@ -24,7 +24,6 @@ export interface ITask extends INode {
     subscribers?: IEdge<IUser>;
     activities?: IEdge<IActivity>;
 }
-
 
 export interface IUser extends INode {
     name?: string;

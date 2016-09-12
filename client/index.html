@@ -8,7 +8,10 @@
         <div id="root-container"></div>
 
         <!-- Main -->
-        <link rel="stylesheet" type="text/css" href="css/bundle.css"></link> 
+        <!-- Webpack output files are served directly on /, so we
+          don't need  ./dist/ prefix for generated files -->
+        <link rel="stylesheet" type="text/css" href="css/bundle.css"></link>
+        <link rel="stylesheet" type="text/css" href="./node_modules/bootstrap/dist/css/bootstrap.css"></link> 
         <script type="text/javascript" src="js/lib.bundle.js"></script>
         <script type="text/javascript" src="js/app.bundle.js"></script>
     </body>
