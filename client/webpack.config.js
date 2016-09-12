@@ -2,18 +2,10 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var webpack = require('webpack');
 
 module.exports = {
-    entry: {
-        app:  "./src/js/app",
-        lib: [
-            "axios",
-            "react", 
-            "react-dom",
-            "lodash"
-        ]
-    },
+    entry: "./src/js/app",
     output: {
         path: "./dist",
-        filename: "js/[name].bundle.js",
+        filename: "js/app.bundle.js"
     },
 
     // Enable sourcemaps for debugging webpack's output.
@@ -48,11 +40,22 @@ module.exports = {
     },
 
     plugins: [
-      new ExtractTextPlugin("css/bundle.css"),
-      new webpack.optimize.CommonsChunkPlugin({
-          name: "lib", // Name of this commons chunk, not related to entry.lib
-          filename: "js/lib.bundle.js",
-      })
-    ]
+      new ExtractTextPlugin("css/bundle.css")
+    ],
+
+    externals: {
+        "react": "React",
+        "react-dom": "ReactDOM",
+        "lodash": "_",
+        "axios": "axios"
+    },
+    devServer: {
+        proxy: {
+            '/api': {
+                target: 'http://localhost:80',
+                secure: false
+            }
+        }
+    }
 };
 

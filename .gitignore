@@ -1,6 +1,5 @@
 npm-debug.log
-client/public/js
-client/public/css
+client/dist
 client/typings
 client/node_modules
 client/npm-debug.log

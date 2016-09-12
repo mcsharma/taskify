@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export function get<T>(nodeID: number, fields: string) {
-    let url = 'http://localhost/api/' + nodeID;
+    let url = 'api/' + nodeID;
     if (fields) {
         url += '?fields=' + fields;
     }
