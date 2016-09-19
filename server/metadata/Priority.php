@@ -4,7 +4,7 @@ enum Priority: string as string {
   UNSPECIFIED = 'unspecified';
   URGENT = 'urgent';
   HIGH = 'high';
-  MEDIUM = 'medium';
+  MID = 'mid';
   LOW = 'low';
   WISHLIST = 'wishlist';
 }

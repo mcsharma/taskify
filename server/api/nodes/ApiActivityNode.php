@@ -22,6 +22,11 @@ final class ApiActivityNode extends ApiNode<Activity> {
       'changed' => ApiField::string('getChangedField'),
       'old_title' => ApiField::string('getOldTitle'),
       'new_title' => ApiField::string('getNewTitle'),
+      'old_description' => ApiField::string('getOldDescription'),
+      'new_description' => ApiField::string('getNewDescription'),
+      'new_status' => ApiField::string('getNewStatus'),
+      'old_priority' => ApiField::string('getOldPriority'),
+      'new_priority' => ApiField::string('getNewPriority'),
     };
   }
 

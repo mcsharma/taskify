@@ -16,16 +16,15 @@ final class Task extends NodeBase {
     $data = json_decode($node['data'], true /*return array instead*/);
     $this->status = TaskStatus::assert($data['status']);
     $this->title = $data['title'];
-    // TODO use idx here
-    $this->description = array_key_exists('description', $data) ? $data['description'] : null;
-    $this->ownerID = array_key_exists('owner_id', $data) ? $data['owner_id']: null;
-    $this->priority = array_key_exists('priority', $data) ? Priority::assert($data['priority']) : Priority::UNSPECIFIED;
+    $this->description = idx($data, 'description') ?: null;
+    $this->ownerID = idx($data, 'owner_id') ?: null;
+    $this->priority =  idx($data, 'priority') ? Priority::assert($data['priority']) : Priority::UNSPECIFIED;
   }
 
   public function getStatus(): TaskStatus {
     return $this->status;
   }
-  
+
   public function getTitle(): string {
     return $this->title;
   }

@@ -98,21 +98,38 @@ final class TaskifyDB {
       int $node_id,
       Map<string, mixed> $fields,
     ): Awaitable<void> {
-      echo $node_id;
+      if ($fields->count() === 0) {
+        return;
+      }
       $conn = await self::genConnection();
       $table = IDUtil::idToTable($node_id);
       // foreach ($fields as $name => $field) {
       //
       // }
-      if ($fields->contains('title'))  {
-        $res = await $conn->queryf(
-          "UPDATE %T SET data = JSON_SET(data, %s, %s) WHERE id = %d",
-          $table,
-          "$.title",
-          (string)$fields['title'],
-          $node_id,
-        );
+      $update_strings = Vector {};
+      foreach ($fields as $field => $value) {
+        $key_str = sprintf('"$.%s"', $field);
+        $value_str = "";
+        if (is_string($value)) {
+          $value_str = sprintf('"%s"', $value);
+        } else if (is_int($value)) {
+          $value_str = (string)$value;
+        } else  {
+          invariant_violation('Unimplemented field type found in in genUpdateNode');
+        }
+        $update_strings[] = $key_str.", ".$value_str;
       }
+      $update_string = implode(', ', $update_strings);
+      // queryfx doesn't support the clunkiness I am doing here, so need to
+      // prepare the query string myself and then use query() instead of
+      // queryfx()
+      $q = sprintf(
+        "UPDATE %s SET data = JSON_SET(data, %s) WHERE id = %d",
+        $table,
+        $update_string,
+        $node_id,
+      );
+      $res = await $conn->query($q);
     }
 
     public static async function genCreateEdge(

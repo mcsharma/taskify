@@ -9,7 +9,8 @@ if (getEnv('ENVIRONMENT') === 'DEV') {
 }
 
 $path = trim($_SERVER['PATH_INFO'], '/');
-$query_string = $_SERVER['QUERY_STRING'];
+$query_string = urldecode($_SERVER['QUERY_STRING']);
+
 $params_map = Map {};
 if ($query_string !== '') {
   $params = explode('&', $query_string);

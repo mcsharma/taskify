@@ -13,6 +13,11 @@ final class Activity extends NodeBase {
   // Change specific
   private ?string $oldTitle;
   private ?string $newTitle;
+  private ?string $oldDescription;
+  private ?string $newDescription;
+  private ?TaskStatus $newStatus;
+  private ?Priority $oldPriority;
+  private ?Priority $newPriority;
 
   public function __construct(Map<string, string> $node) {
     parent::__construct($node);
@@ -24,6 +29,14 @@ final class Activity extends NodeBase {
 
     $this->oldTitle = idx($data, 'old_title');
     $this->newTitle = idx($data, 'new_title');
+
+    $this->oldDescription = idx($data, 'old_description') ?: null;
+    $this->newDescription = idx($data, 'new_description') ?: null;
+
+    $this->newStatus = TaskStatus::coerce(idx($data, 'new_status'));
+
+    $this->oldPriority = Priority::coerce(idx($data, 'old_priority'));
+    $this->newPriority = Priority::coerce(idx($data, 'new_priority'));
   }
 
   public function getChangedField(): TaskField {
@@ -44,5 +57,25 @@ final class Activity extends NodeBase {
 
   public function getNewTitle(): ?string {
     return $this->newTitle;
+  }
+
+  public function getOldDescription(): ?string {
+    return $this->oldDescription;
+  }
+
+  public function getNewDescription(): ?string {
+    return $this->newDescription;
+  }
+
+  public function getNewStatus(): ?TaskStatus {
+    return $this->newStatus;
+  }
+
+  public function getOldPriority(): ?Priority {
+    return $this->oldPriority;
+  }
+
+  public function getNewPriority(): ?Priority {
+    return $this->newPriority;
   }
 }
