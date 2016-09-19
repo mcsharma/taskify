@@ -1,0 +1,52 @@
+.task-detail {
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+    .top-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        .task-title {
+            flex-grow: 1;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 25px;
+        }
+        .save-button {
+            margin-right: 10px;
+            border: none;
+            color: white;
+            background-color: #4080ff;
+            border-radius: 2px;
+            padding-top: 5px;
+            padding-left: 10px;
+            padding-right: 10px;
+            padding-bottom: 5px;
+        }
+        .save-button:hover {
+            background-color: #3575ef;
+        }
+        .save-button:disabled {
+            background-color: rgba(68, 132, 255, 0.54);
+        }
+    }
+    .task-field {
+        &.task-description {
+            display: flex;
+            align-items: flex-start;
+            textarea {
+                flex-grow: 1;
+                border: 1px solid lightgray;
+            }
+
+        }
+        input {
+            background-color: whitesmoke;
+            border: 1px solid transparent;
+        }
+        input:hover, input:focus {
+            border: 1px solid lightgray;
+            outline: none;
+        }
+    }
+}

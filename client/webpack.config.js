@@ -12,13 +12,11 @@ module.exports = {
     devtool: "source-map",
 
     resolve: {
-        // Add '.ts' and '.tsx' as resolvable extensions.
         extensions: ["", ".webpack.js", ".web.js", ".ts", ".tsx", ".js"]
     },
 
     module: {
         loaders: [
-            // All files with a '.ts' or '.tsx' extension will be handled by 'ts-loader'.
             {
                 test: /\.tsx?$/, 
                 loader: "ts-loader" 
@@ -47,7 +45,8 @@ module.exports = {
         "react": "React",
         "react-dom": "ReactDOM",
         "lodash": "_",
-        "axios": "axios"
+        "axios": "axios",
+        "urijs": "URI"
     },
     devServer: {
         proxy: {

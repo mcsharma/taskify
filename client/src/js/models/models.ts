@@ -45,6 +45,11 @@ export interface IActivity extends INode {
     changed: string;
     old_title?: string;
     new_title?: string;
+    old_description?: string;
+    new_description?: string;
+    new_status?: string;
+    old_priority?: string;
+    new_priority?: string;
 }
 
 export class NodeBase<T extends INode> {
@@ -210,6 +215,10 @@ export class Task extends NodeBase<ITask> {
     getCreator() {
         return this.creator;
     }
+
+    setTitle(title: string) {
+        this.json.title = title;
+    }
 }
 
 export class Tag extends NodeBase<ITag> {
@@ -257,6 +266,26 @@ export class Activity extends NodeBase<IActivity> {
 
     getNewTitle() {
         return this.json.new_title;
+    }
+
+    getOldDescription() {
+        return this.json.old_description;
+    }
+
+    getNewDescription() {
+        return this.json.new_description;
+    }
+
+    getNewStatus() {
+        return this.json.new_status;
+    }
+
+    getOldPriority() {
+        return this.json.old_priority;
+    }
+
+    getNewPriority() {
+        return this.json.new_priority;
     }
 
     getActor() {

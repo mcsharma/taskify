@@ -1,8 +1,7 @@
 import * as React from "react";
-import axios from "axios";
 import * as API from './api/API';
-import TaskDetail from './TaskDetail';
-import {Task,ITask,User,IUser} from "./models/models";
+import {TaskDetail, getTaskFields} from './TaskDetail';
+import {Task,User,IUser} from "./models/models";
 
 interface State {
     tasks?: Task[];
@@ -11,7 +10,7 @@ interface State {
 }
 
 interface Props {
-    userID: number;
+    userID: string;
 }
 
 export default class TaskPanel extends React.Component<Props, State> {
@@ -40,7 +39,7 @@ export default class TaskPanel extends React.Component<Props, State> {
                         </thead>
                         <tbody>
                             {this.state.tasks.map((task) => {
-                                return (<tr key={task.getID()} onClick={this.updateSelectedTask.bind(this, task.getID())}>
+                                return (<tr key={task.getID()} onClick={(event) => this.updateSelectedTask(task.getID(), event)}>
                                     <td className="tk-owner">{task.getOwner() ? task.getOwner()!.getName() : ''}</td>
                                     <td className="tk-priority">{task.getPriority()}</td>
                                     <td className="tk-title">{task.getTitle()}</td>
@@ -62,18 +61,20 @@ export default class TaskPanel extends React.Component<Props, State> {
     private fetchTasks(): void {
         API.get<IUser>(
             this.props.userID,
-            'id,tasks{id,created_time,updated_time,title,description,status,owner,priority}'
+            'id,tasks{'+getTaskFields()+'}'
         ).then((response) => {
             let user = new User(response);
             this.setState({
                 tasks: user.getTasks(),
                 total_count: user.getTasksCount(),
-                selected_task: user.getTasks()![1]
+                selected_task: user.getTasks()![0]
             });
+        }).catch((error) => {
+            console.log(error);
         });
     }
 
-    private updateSelectedTask(taskID: string, event: any): void {
+    private updateSelectedTask(taskID: string, event: React.MouseEvent<HTMLTableRowElement>): void {
         if (this.state.selected_task && taskID === this.state.selected_task.getID()) {
             return;
         }

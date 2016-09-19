@@ -9,7 +9,7 @@ export class Root extends React.Component<{}, {}> {
                 <div className="content">
                     <div className="side-bar"></div>
                     <div className="main-content">
-                        <TaskPanel userID={1}/>
+                        <TaskPanel userID={'1'}/>
                     </div>
                 </div>
             </div>
