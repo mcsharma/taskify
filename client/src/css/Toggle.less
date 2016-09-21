@@ -1,0 +1,35 @@
+.toggle-button {
+    width: 70px;
+    height: 25px;
+    display: flex;
+    border-radius: 2px;
+    cursor: pointer;
+    &.active {
+        border: 2px solid #4080ff;
+        .left {
+            background-color: #4080ff;
+            width: 80%;
+            text-align: center;
+            color: white;
+        }
+        .right {
+            width: 20%;
+            text-align: center;
+            background-color: white;
+        }
+    }
+    &.passive {
+        border: 2px solid darkgray;
+        .left {
+            width: 20%;
+            background-color: white;
+            text-align: center;
+        }
+        .right {
+            background-color: darkgray;
+            width: 80%;
+            text-align: center;
+            color: white;
+        }
+    }
+}

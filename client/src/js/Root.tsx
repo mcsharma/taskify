@@ -5,7 +5,7 @@ export class Root extends React.Component<{}, {}> {
     render() {
         return (
             <div className="root">
-                <div className="top-bar"></div>
+                <div className="top-bar">TASKIFY</div>
                 <div className="content">
                     <div className="side-bar"></div>
                     <div className="main-content">

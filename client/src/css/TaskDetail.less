@@ -5,12 +5,11 @@
     .top-row {
         display: flex;
         justify-content: space-between;
-        align-items: flex-start;
+        margin-bottom: 20px;
         .task-title {
             flex-grow: 1;
             font-size: 20px;
             font-weight: bold;
-            margin-bottom: 25px;
         }
         .save-button {
             margin-right: 10px;
@@ -31,14 +30,28 @@
         }
     }
     .task-field {
-        &.task-description {
-            display: flex;
-            align-items: flex-start;
+        display: flex;
+        align-items: flex-start;
+        margin: 5px 0 5px 0;
+        &.description {
             textarea {
                 flex-grow: 1;
                 border: 1px solid lightgray;
             }
 
+        }
+        &.priority {
+            display: flex;
+            align-items: flex-start;
+            .Select {
+                width: 110px;
+                .Select-value {
+                    cursor: pointer;
+                }
+            }
+        }
+        .name {
+            width: 130px;
         }
         input {
             background-color: whitesmoke;

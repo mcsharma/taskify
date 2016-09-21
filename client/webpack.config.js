@@ -46,7 +46,8 @@ module.exports = {
         "react-dom": "ReactDOM",
         "lodash": "_",
         "axios": "axios",
-        "urijs": "URI"
+        "urijs": "URI",
+        "jquery": "$"
     },
     devServer: {
         proxy: {
