@@ -4,9 +4,7 @@ set_error_handler(get_error_handler());
 
 require_once('api/ApiServer.php');
 
-// Note(mahesh): These are saved in conf.d/server-environment-dev.conf file
-// inside the apache2's directory.
-if (getEnv('ENVIRONMENT') === 'DEV') {
+if ($_ENV['dev']) {
     header("Access-Control-Allow-Origin: *");
 }
 

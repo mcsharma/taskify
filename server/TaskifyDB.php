@@ -3,13 +3,20 @@
 require('IDUtil.php');
 require('NodeType.php');
 require('EdgeType.php');
+require_once('ServerConfig.php');
 
 final class TaskifyDB {
 
     private static async function genConnection(): Awaitable<\AsyncMysqlConnection> {
         // Get a connection pool with default options
         $pool = new \AsyncMysqlConnectionPool(array());
-        return await $pool->connect('localhost', 3306, 'taskify', 'root', '');
+        return await $pool->connect(
+          ServerConfig::getDBHost(),
+          3306,
+          'taskify',
+          'root',
+          ServerConfig::getDBPassword(),
+        );
     }
 
     public static async function genNode(int $id): Awaitable<Map<string, string>> {
