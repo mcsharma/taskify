@@ -1,4 +1,6 @@
 <?hh
+// Nothing must be placed before this call.
+set_error_handler(get_error_handler());
 
 require_once('api/ApiServer.php');
 
@@ -31,4 +33,25 @@ if (substr($path, 0, 4) === 'api/') {
   }
 } else {
   echo 'Taskify API Server';
+}
+
+
+function get_error_handler() {
+  return function ($errorNumber, $message, $errfile, $errline) {
+    switch ($errorNumber) {
+        case E_ERROR:
+            $errorLevel = 'Error';
+            break;
+        case E_WARNING:
+            $errorLevel = 'Warning';
+            break;
+        case E_NOTICE:
+            $errorLevel = 'Notice';
+            break;
+        default:
+            $errorLevel = 'Undefined';
+    }
+    echo '<br/><b>'.$errorLevel.'</b>: '.$message.' in <b>'.
+      $errfile.'</b> on line <b>'.$errline.'</b><br/>';
+  };
 }
