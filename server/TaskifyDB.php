@@ -22,6 +22,9 @@ final class TaskifyDB {
     public static async function genNode(int $id): Awaitable<Map<string, string>> {
         $table = IDUtil::idToTable($id);
         $conn = await self::genConnection();
+        // Note: There seems to be a problem with queryf() function. It is
+        // apparently crashing hhvm and no stacktrace provided. That's why 
+        // queryf is used everywhere.
         $result = await $conn->query('SELECT * from '.$table.' WHERE id = '.$id);
         // There shouldn't be more than one row returned for one user id
         invariant($result->numRows() === 1, 'one row exactly');
@@ -62,12 +65,12 @@ final class TaskifyDB {
       EdgeType $edgeType,
     ): Awaitable<bool> {
       $conn = await self::genConnection();
-      $response = await $conn->queryf(
-        'SELECT COUNT(1) FROM edge WHERE id1 = %d AND id2 = %d AND type = %d',
+      $response = await $conn->query(
+        sprintf('SELECT COUNT(1) FROM edge WHERE id1 = %d AND id2 = %d AND type = %d',
         $id1,
         $id2,
         (int)$edgeType,
-      );
+      ));
       return $response->vectorRows()[0][0] > 0;
     }
 
@@ -92,11 +95,8 @@ final class TaskifyDB {
       $conn = await self::genConnection();
       $table = IDUtil::typeToTable($node_type);
       $data = json_encode($fields);
-      $res = await $conn->queryf(
-        "INSERT INTO %T (data) VALUES (%s)",
-        $table,
-        $data,
-      );
+      $q = sprintf("INSERT INTO %s (data) VALUES ('%s')", $table, $data);
+      $res = await $conn->query($q);
       return $res->lastInsertId();
     }
 
@@ -110,9 +110,6 @@ final class TaskifyDB {
       }
       $conn = await self::genConnection();
       $table = IDUtil::idToTable($node_id);
-      // foreach ($fields as $name => $field) {
-      //
-      // }
       $update_strings = Vector {};
       foreach ($fields as $field => $value) {
         $key_str = sprintf('"$.%s"', $field);
@@ -127,9 +124,6 @@ final class TaskifyDB {
         $update_strings[] = $key_str.", ".$value_str;
       }
       $update_string = implode(', ', $update_strings);
-      // queryfx doesn't support the clunkiness I am doing here, so need to
-      // prepare the query string myself and then use query() instead of
-      // queryfx()
       $q = sprintf(
         "UPDATE %s SET data = JSON_SET(data, %s) WHERE id = %d",
         $table,
@@ -160,16 +154,16 @@ final class TaskifyDB {
       $json_data = json_encode($data);
       $conn = await self::genConnection();
       if ($inverse_type !== null) {
-        await $conn->queryf(
-          'INSERT INTO edge (id1, id2, type, data) VALUES (%d, %d, %d, %s), (%d, %d, %d, %s)',
+        await $conn->query(sprintf(
+          "INSERT INTO edge (id1, id2, type, data) VALUES (%d, %d, %d, '%s'), (%d, %d, %d, '%s')",
           $id1, $id2, (int)$edge_type, $json_data,
           $id2, $id1, (int)$inverse_type, $json_data
-        );
+        ));
       } else {
-        await $conn->queryf(
-          'INSERT INTO edge (id1, id2, type) VALUES (%d, %d, %d, %s)',
-          $id1, $id2, (int)$edge_type, $json_data
-        );
+        await $conn->query(sprintf(
+          "INSERT INTO edge (id1, id2, type, data) VALUES (%d, %d, %d, '%s')", 
+          $id1, $id2, (int)$edge_type, $json_data,
+        ));
       }
     }
 }
