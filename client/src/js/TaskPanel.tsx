@@ -2,6 +2,8 @@ import * as React from "react";
 import * as API from './api/API';
 import {TaskDetail, getTaskFields} from './TaskDetail';
 import {Task,User,IUser} from "./models/models";
+import TaskPriority from "./TaskPriority";
+import {Priority} from "./metadata/Priority";
 
 interface State {
     tasks?: Task[];
@@ -10,7 +12,7 @@ interface State {
 }
 
 interface Props {
-    userID: string;
+    userID: number;
 }
 
 export default class TaskPanel extends React.Component<Props, State> {
@@ -23,7 +25,7 @@ export default class TaskPanel extends React.Component<Props, State> {
     public render() {
         if (typeof this.state.tasks === 'undefined') {
             this.fetchTasks();
-            return <div>{"Loading"}</div>;
+            return <div>Loading tasks...</div>;
         }
         return (
             <div className="tk-panel">
@@ -40,10 +42,12 @@ export default class TaskPanel extends React.Component<Props, State> {
                         <tbody>
                             {this.state.tasks.map((task) => {
                                 return (<tr key={task.getID()} onClick={(event) => this.updateSelectedTask(task.getID(), event)}>
-                                    <td className="tk-owner">{task.getOwner() ? task.getOwner()!.getName() : ''}</td>
-                                    <td className="tk-priority">{task.getPriority()}</td>
-                                    <td className="tk-title">{task.getTitle()}</td>
-                                    <td className="tk-last-update">{task.getUpdatedTime()}</td>
+                                    <td className="col-owner">{task.getOwner() ? task.getOwner()!.getName() : ''}</td>
+                                    <td className="col-priority">
+                                        <TaskPriority priority={task.getPriority() as Priority} />
+                                    </td>
+                                    <td className="col-title">{task.getTitle()}</td>
+                                    <td className="col-last-update">{task.getUpdatedTime()}</td>
                                 </tr>);
                                 })}
                         </tbody>
@@ -60,7 +64,7 @@ export default class TaskPanel extends React.Component<Props, State> {
 
     private fetchTasks(): void {
         API.get<IUser>(
-            this.props.userID,
+            this.props.userID.toString(),
             'id,tasks{'+getTaskFields()+'}'
         ).then((response) => {
             let user = new User(response);

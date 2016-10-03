@@ -1,5 +1,7 @@
 npm-debug.log
 client/dist
+client/**/*.js
+client/**/*.js.map
 client/typings
 client/node_modules
 client/npm-debug.log

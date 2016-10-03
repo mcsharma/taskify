@@ -57,7 +57,7 @@ export class TaskDetail extends React.Component<Props, State> {
 
         return (
             <div className="task-detail"
-                 style={{backgroundColor: hasChange ? 'lightyellow' : 'whitesmoke'}}>
+                 style={{backgroundColor: hasChange ? 'lightyellow' : 'white'}}>
                 <div className="top-row">
                     <input className="task-title"
                            value={this.getTitle()}

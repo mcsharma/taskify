@@ -1,20 +1,19 @@
 .root {
     height: 100vh;
-    background-color: whitesmoke;
     display: flex;
     flex-direction: column;
     .top-bar {
         width: 100%;
-        height: 40px;
         background-color: #4080ff;
         color: white;
         font-size: 16px;
+        flex: 0 0 40px;
     }
     .content {
-        flex-grow: 1;
+        flex: 1 1 auto;
         display: flex;
         .side-bar {
-            width: 50px;
+            flex: 0 0 50px;
             background-color: #676767;
             border-right: 1px solid #444444;
         }
@@ -25,27 +24,28 @@
                 width: 100%;
                 height: 100%;
                 .tk-list {
-                    width: 750px;
-                    border-right: 1px solid lightgray;
+                    flex: 0 0 600px;
+                    border-right: 5px solid #efefef;
                     tr {
                         display: flex;
                         cursor: pointer;
-                        .tk-header-owner, .tk-owner {
+                        .tk-header-owner, .col-owner {
                             width: 125px;
                         }
-                        .tk-header-priority, .tk-priority {
+                        .tk-header-priority, .col-priority {
                             width: 100px;
                         }
-                        .tk-header-last-update, .tk-last-update {
+                        .tk-header-last-update, .col-last-update {
                             width: 150px;
                         }
-                        .tk-header-title, .tk-title {
+                        .tk-header-title, .col-title {
                             flex-grow: 1;
                         }
                     }
                 }
                 .selected-task {
                     flex-grow: 1;
+                    overflow-y: auto;
                 }
             }
         }
