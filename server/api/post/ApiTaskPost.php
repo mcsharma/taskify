@@ -23,10 +23,10 @@ final class ApiTaskPost extends ApiPostBase {
       "genExecute() shouldn't be sent any other param except the defined ones",
     );
     // Encapsulare this logic into a seprate TaskUpdater
-    $task = await Task::gen($node_id);
+    $task = await Task::gen($this->getViewerID(), $node_id);
     await TaskifyDB::genUpdateNode($node_id, $params);
-    $updated_task = await Task::gen($node_id);
-    $actor_id = 1;
+    $updated_task = await Task::gen($this->getViewerID(), $node_id);
+    $actor_id = $this->getViewerID();
     if ($updated_task->getTitle() !== $task->getTitle()) {
       $activity_id = await TaskifyDB::genCreateNode(NodeType::ACTIVITY, Map {
         'task_id' => $node_id,

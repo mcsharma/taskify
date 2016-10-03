@@ -14,9 +14,11 @@ abstract class ApiNode<+T as NodeBase> extends ApiNonEdgeField {
 
   abstract public function getDefaultFields(): Traversable<string>;
 
+  // TODO this funtion should go away soon, set the field object directly.
   public async function genSetRootNodeID(int $id): Awaitable<void> {
     $node_class = $this->getNodeClass();
-    $node = await $node_class::gen($id);
+    $viewer_id = $this->getViewerID();
+    $node = await $node_class::gen($viewer_id, $id);
     $this->setParentNode($node);
   }
 
@@ -28,7 +30,7 @@ abstract class ApiNode<+T as NodeBase> extends ApiNonEdgeField {
     $node = $res;
     if (is_int($res)) {
       $node_class = $this->getNodeClass();
-      $node = await $node_class::gen($res);
+      $node = await $node_class::gen($this->getViewerID(), $res);
     }
     invariant($node instanceof NodeBase, 'Must be a nodebase');
     $field_defs = await $this->genFields();
@@ -44,7 +46,10 @@ abstract class ApiNode<+T as NodeBase> extends ApiNonEdgeField {
         throw new Exception(sprintf("Requested non-existing field '%s'", $field));
       }
       $field_obj = $field_defs[$field];
-      $field_obj->setName($field)->setParentNode($node);
+      $field_obj
+        ->setViewerID($this->getViewerID())
+        ->setName($field)
+        ->setParentNode($node);
       if ($field_obj instanceof ApiNode || $field_obj instanceof ApiEdge) {
         if ($fields_tree === true) {
           $fields_tree = ImmMap {};

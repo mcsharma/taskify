@@ -161,9 +161,48 @@ final class TaskifyDB {
         ));
       } else {
         await $conn->query(sprintf(
-          "INSERT INTO edge (id1, id2, type, data) VALUES (%d, %d, %d, '%s')", 
+          "INSERT INTO edge (id1, id2, type, data) VALUES (%d, %d, %d, '%s')",
           $id1, $id2, (int)$edge_type, $json_data,
         ));
       }
+    }
+
+    /**
+     * Returns data from 'hash' table, for a given hash_type and key
+     */
+     // TODO convert hash type to enum
+    public static async function genHashValue(
+      string $hash_type,
+      string $key,
+    ): Awaitable<?Map<string, mixed>> {
+      $conn = await self::genConnection();
+      $result = await $conn->query(sprintf(
+        "SELECT value from hash WHERE type = '%s' AND `key` = '%s'",
+        $hash_type,
+        $key
+      ));
+      // There shouldn't be more than one row returned for one user id
+      invariant($result->numRows() <= 1, 'Must be at most 1 row');
+      if ($result->numRows() === 0) {
+        return null;
+      }
+      // A vector of vector objects holding the string values of each column
+      // in the query
+      return new Map(json_decode($result->mapRows()[0]['value'], true));
+    }
+
+    public static async function genSetHash(
+      string $has_type,
+      string $key, Map<string, mixed> $value,
+    ): Awaitable<void> {
+      $conn = await self::genConnection();
+      $encoded_value = json_encode($value);
+      await $conn->query(sprintf(
+        "INSERT INTO hash (type, `key`, value) VALUES('%s', '%s', '%s') ON DUPLICATE KEY UPDATE value='%s'",
+        $has_type,
+        $key,
+        $encoded_value,
+        $encoded_value,
+      ));
     }
 }

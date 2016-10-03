@@ -3,8 +3,12 @@
 <<__ConsistentConstruct>>
 abstract class ApiFieldBase {
 
+  private ?int $viewerID;
   private ?string $name;
   private ?NodeBase $parentNode;
+
+  public function __construct() {
+  }
 
   public function setName(string $name): this {
     $this->name = $name;
@@ -14,6 +18,17 @@ abstract class ApiFieldBase {
   public function setParentNode(NodeBase $node): this {
     $this->parentNode = $node;
     return $this;
+  }
+
+  public function setViewerID(int $viewerID): this {
+    $this->viewerID = $viewerID;
+    return $this;
+  }
+
+  public function getViewerID(): int {
+    $viewer_id = $this->viewerID;
+    invariant($viewer_id !== null, 'viewer ID must have been set by now');
+    return $viewer_id;
   }
 
   public function parentNode(): ?NodeBase {

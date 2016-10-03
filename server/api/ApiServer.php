@@ -4,6 +4,7 @@ require_once('nodes/ApiUserNode.php');
 require_once('nodes/ApiTaskNode.php');
 require_once('IDUtil.php');
 require_once('ApiList.php');
+require_once('api/login/ApiLogin.php');
 
 final class ApiServer {
 
@@ -22,9 +23,18 @@ final class ApiServer {
     string $path,
     ImmMap<string, string> $params,
   ): Awaitable<Map<string, mixed>> {
+    if ($path === 'login') {
+      // Login request
+      return await ApiLogin::genLogin(
+        (int)idx($params, 'fbid'),
+        idx($params, 'fbToken'),
+      );
+    }
+    // From this point we must have a valid authToken.
+    $viewer_id = await self::genValidateAuthToken(idx($params, 'authToken'));
     if ($params->containsKey('method') &&
         strtolower($params['method']) === 'post') {
-      return await self::genProcessPostRequest($path, $params);
+      return await self::genProcessPostRequest($viewer_id, $path, $params);
     }
     $node_id = (int)$path;
     $type = IDUtil::idToType($node_id);
@@ -33,10 +43,11 @@ final class ApiServer {
       ? self::parseFieldMap($params['fields'])
       : ImmMap {};
 
-    $node = await NodeBase::genDynamic($node_id);
+    $node = await NodeBase::genDynamic($viewer_id, $node_id);
     $api_node_class = IDUtil::nodeClassToApiNodeClass(get_class($node));
     $api_node = new $api_node_class();
     await $api_node
+      ->setViewerID($viewer_id)
       ->setFieldsTree($fields)
       ->genSetRootNodeID($node_id);
 
@@ -50,6 +61,7 @@ final class ApiServer {
   }
 
   private static async function genProcessPostRequest(
+    int $viewer_id,
     string $path,
     ImmMap<string, string> $params,
   ): Awaitable<Map<string, mixed>> {
@@ -69,7 +81,7 @@ final class ApiServer {
     }
     invariant($matched_api_classname !== null, 'No Api class matched the given path');
 
-    $api_class_obj = new $matched_api_classname();
+    $api_class_obj = new $matched_api_classname($viewer_id);
     $processed_params_wrapped_result = await \HH\Asio\mmkw(
       $api_class_obj->paramDefinitions(),
       async ($name, $definition) ==> {
@@ -163,5 +175,30 @@ final class ApiServer {
       $params_map[$param_name] = $param_val;
     }
     return tuple($name, $params_map->toImmMap());
+  }
+
+  // Validates the access token and returns the underlying user id in it.
+  private static async function genValidateAuthToken(
+    ?string $authToken,
+  ): Awaitable<int> {
+    if ($authToken === null) {
+      throw new Exception('auth token must be provided');
+    }
+    $parts = explode(':', base64_decode($authToken), 2);
+    if (count($parts) < 2) {
+      throw new Exception('invalid accesss token');
+    }
+    $user_id = (int)$parts[0];
+    IDUtil::assertValidOfType($user_id, NodeType::USER);
+    $auth_token_data = await TaskifyDB::genHashValue(
+      'user_id_to_token',
+      (string)$user_id,
+    );
+    if ($auth_token_data === null || idx($auth_token_data, 'token') !== $authToken) {
+      throw new Exception('Invalid token');
+    }
+
+    // At this point the token is valid. Return the viewer id.
+    return $user_id;
   }
 }

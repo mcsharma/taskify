@@ -6,17 +6,18 @@ final class User extends NodeBase {
 
     private string $firstName;
     private string $lastName;
-    private string $email;
+    private ?string $email;
 
     public function __construct(
+        int $viewerID,
         Map<string, string> $node,
     ) {
-        parent::__construct($node);
-        $data = json_decode($node['data']);
+        parent::__construct($viewerID, $node);
+        $data = json_decode($node['data'], true);
 
-        $this->firstName = $data->first_name;
-        $this->lastName = $data->last_name;
-        $this->email = $data->email;
+        $this->firstName = $data['first_name'];
+        $this->lastName = $data['last_name'];
+        $this->email = idx($data, 'email');
     }
 
     public function getFirstName(): string {
@@ -31,7 +32,7 @@ final class User extends NodeBase {
       return $this->firstName.' '.$this->lastName;
     }
 
-    public function getEmail(): string {
+    public function getEmail(): ?string {
         return $this->email;
     }
 }

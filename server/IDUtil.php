@@ -65,6 +65,22 @@ final class IDUtil {
       return self::idToTypeNullable($id) !== null;
     }
 
+    public static function assertValid(int $id): void {
+      self::idToType($id);
+    }
+
+    public static function assertValidOfType(
+      int $id,
+      NodeType $expected_type,
+    ): void {
+      $type = self::idToType($id);
+      invariant(
+        $expected_type === $type ,
+        'Unexpected type of ID %d. Expected %d, found %d',
+        $expected_type, $type,
+      );
+    }
+
     public static function idToNodeLoaderClass(int $id): classname<NodeBase> {
       $type = self::idToType($id);
       switch ($type) {

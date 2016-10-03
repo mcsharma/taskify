@@ -8,8 +8,8 @@ final class Tag extends NodeBase {
   private ?string $description;
   private int $creatorID;
 
-  public function __construct(Map<string, string> $node) {
-    parent::__construct($node);
+  public function __construct(int $viewerID, Map<string, string> $node) {
+    parent::__construct($viewerID, $node);
     // TODO move json decoding logic into NodeBase
     $data = json_decode($node['data'], true /*return array instead*/);
     $this->caption = $data['caption'];

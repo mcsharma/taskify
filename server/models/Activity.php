@@ -19,8 +19,8 @@ final class Activity extends NodeBase {
   private ?Priority $oldPriority;
   private ?Priority $newPriority;
 
-  public function __construct(Map<string, string> $node) {
-    parent::__construct($node);
+  public function __construct(int $viewerID, Map<string, string> $node) {
+    parent::__construct($viewerID, $node);
     $data = json_decode($node['data'], true);
     $this->changedField = TaskField::assert($data['changed']);
 

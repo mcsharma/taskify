@@ -9,7 +9,7 @@ if ($_ENV['dev']) {
 }
 
 $path = trim($_SERVER['PATH_INFO'], '/');
-$query_string = urldecode($_SERVER['QUERY_STRING']);
+$query_string = $_SERVER['QUERY_STRING'];
 
 $params_map = Map {};
 if ($query_string !== '') {
@@ -17,7 +17,7 @@ if ($query_string !== '') {
   foreach ($params as $param) {
     $key_and_value = explode('=', $param);
     $key = array_shift($key_and_value);
-    $value = count($key_and_value) > 0 ? $key_and_value[0] : null;
+    $value = count($key_and_value) > 0 ? urldecode($key_and_value[0]) : null;
     $params_map[$key] = $value;
   }
 }
@@ -27,7 +27,9 @@ if (substr($path, 0, 4) === 'api/') {
     $res = \HH\Asio\join(ApiServer::genResponseJson($api_path, new ImmMap($params_map)));
     echo $res;
   } catch (Exception $e) {
-    echo $e->getMessage();
+    echo json_encode(Map {
+      'error' => $e->getMessage(),
+    });
   }
 } else {
   echo 'Taskify API Server';

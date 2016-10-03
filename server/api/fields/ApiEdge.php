@@ -16,12 +16,16 @@ abstract class ApiEdge<T as NodeBase> extends ApiFieldBase {
     invariant($parent_node !== null, 'parent must have been set');
     $edge_class = $this->getEdgeClass();
     // TODO apply limit from param here
-    $nodes = await (new $edge_class($parent_node->getID()))->genNodes();
+    $nodes = await (new $edge_class(
+      $this->getViewerID(),
+      $parent_node->getID(),
+    ))->genNodes();
     $api_node_class = $this->getTargetNodeClass();
     $nodes_data = Vector {};
     foreach ($nodes as $node) {
       $api_node = new $api_node_class();
       $res = await $api_node
+        ->setViewerID($this->getViewerID())
         ->setParentNode($node)
         ->setFieldsTree($this->fieldsTree)
         ->genResult();

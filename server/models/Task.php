@@ -11,8 +11,8 @@ final class Task extends NodeBase {
   private ?int $ownerID;
   private Priority $priority;
 
-  public function __construct(Map<string, string> $node) {
-    parent::__construct($node);
+  public function __construct(int $viewerID, Map<string, string> $node) {
+    parent::__construct($viewerID, $node);
     $data = json_decode($node['data'], true /*return array instead*/);
     $this->status = TaskStatus::assert($data['status']);
     $this->title = $data['title'];
