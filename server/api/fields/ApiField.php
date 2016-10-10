@@ -1,12 +1,12 @@
 <?hh // strict
 
-require_once('api/fields/ApiNonEdgeField.php');
+require_once('api/fields/ApiScalarField.php');
 require_once('api/fields/ApiNode.php');
 
 abstract final class ApiField {
 
-  public static function string(string $method_name): ApiNonEdgeField {
-    return (new ApiNonEdgeField())->setMethod($method_name);
+  public static function scalar(string $method_name): ApiScalarField {
+    return (new ApiScalarField())->setMethod($method_name);
   }
 
   public static function node<T as NodeBase>(

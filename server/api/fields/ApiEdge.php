@@ -2,8 +2,10 @@
 
 require_once('ApiFieldBase.php');
 
+<<__ConsistentConstruct>>
 abstract class ApiEdge<T as NodeBase> extends ApiFieldBase {
 
+  private ?int $sourceID;
   private ImmMap<string, mixed> $fieldsTree = ImmMap {};
   private ImmMap<string, mixed> $params = ImmMap {};
 
@@ -12,13 +14,13 @@ abstract class ApiEdge<T as NodeBase> extends ApiFieldBase {
   abstract public function getTargetNodeClass(): classname<ApiNode<T>>;
 
   public async function genResult(): Awaitable<?Map<string, mixed>> {
-    $parent_node = $this->parentNode();
-    invariant($parent_node !== null, 'parent must have been set');
+    $source_id = $this->sourceID;
+    invariant($source_id !== null, 'source ID must have been set');
     $edge_class = $this->getEdgeClass();
     // TODO apply limit from param here
     $nodes = await (new $edge_class(
       $this->getViewerID(),
-      $parent_node->getID(),
+      $source_id,
     ))->genNodes();
     $api_node_class = $this->getTargetNodeClass();
     $nodes_data = Vector {};
@@ -26,7 +28,7 @@ abstract class ApiEdge<T as NodeBase> extends ApiFieldBase {
       $api_node = new $api_node_class();
       $res = await $api_node
         ->setViewerID($this->getViewerID())
-        ->setParentNode($node)
+        ->setRawFieldValue($node)
         ->setFieldsTree($this->fieldsTree)
         ->genResult();
       $nodes_data[] = $res;
@@ -35,6 +37,11 @@ abstract class ApiEdge<T as NodeBase> extends ApiFieldBase {
       'total_count' => $nodes_data->count(),
       'nodes' => $nodes_data,
     };
+  }
+
+  public function setSourceID(int $sourceID): this {
+    $this->sourceID = $sourceID;
+    return $this;
   }
 
   public function setFieldsTree(ImmMap<string, mixed> $fieldsTree): this {

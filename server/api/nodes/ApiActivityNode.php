@@ -14,19 +14,19 @@ final class ApiActivityNode extends ApiNode<Activity> {
   public async function genFields(
   ): Awaitable<ImmMap<string, ApiFieldBase>> {
     return ImmMap {
-      'id' => ApiField::string('getIDString'),
-      'created_time' => ApiField::string('getCreatedTime'),
-      'updated_time' => ApiField::string('getUpdatedTime'),
+      'id' => ApiField::scalar('getIDString'),
+      'created_time' => ApiField::scalar('getCreatedTime'),
+      'updated_time' => ApiField::scalar('getUpdatedTime'),
       'actor' => ApiField::node('getActorID', ApiUserNode::class),
       'task' => ApiField::node('getTaskID', ApiTaskNode::class),
-      'changed' => ApiField::string('getChangedField'),
-      'old_title' => ApiField::string('getOldTitle'),
-      'new_title' => ApiField::string('getNewTitle'),
-      'old_description' => ApiField::string('getOldDescription'),
-      'new_description' => ApiField::string('getNewDescription'),
-      'new_status' => ApiField::string('getNewStatus'),
-      'old_priority' => ApiField::string('getOldPriority'),
-      'new_priority' => ApiField::string('getNewPriority'),
+      'changed' => ApiField::scalar('getChangedField'),
+      'old_title' => ApiField::scalar('getOldTitle'),
+      'new_title' => ApiField::scalar('getNewTitle'),
+      'old_description' => ApiField::scalar('getOldDescription'),
+      'new_description' => ApiField::scalar('getNewDescription'),
+      'new_status' => ApiField::scalar('getNewStatus'),
+      'old_priority' => ApiField::scalar('getOldPriority'),
+      'new_priority' => ApiField::scalar('getNewPriority'),
     };
   }
 

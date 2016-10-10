@@ -16,11 +16,11 @@ final class ApiUserNode extends ApiNode<User> {
   public async function genFields(
   ): Awaitable<ImmMap<string, ApiFieldBase>> {
     return ImmMap {
-      'id' => ApiField::string('getIDString'),
-      'created_time' => ApiField::string('getCreatedTime'),
-      'email' => ApiField::string('getEmail'),
-      'name' => ApiField::string('getName'),
-      'updated_time' => ApiField::string('getUpdatedTime'),
+      'id' => ApiField::scalar('getIDString'),
+      'created_time' => ApiField::scalar('getCreatedTime'),
+      'email' => ApiField::scalar('getEmail'),
+      'name' => ApiField::scalar('getName'),
+      'updated_time' => ApiField::scalar('getUpdatedTime'),
       'tasks' => ApiField::edge(ApiUserTasksEdge::class),
       'created_tasks' => ApiField::edge(ApiUserCreatedTasksEdge::class),
       'activities' => ApiField::edge(ApiUserActivitiesEdge::class),

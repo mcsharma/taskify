@@ -17,15 +17,15 @@ final class ApiTaskNode extends ApiNode<Task> {
   public async function genFields(
   ): Awaitable<ImmMap<string, ApiFieldBase>> {
     return ImmMap {
-      'id' => ApiField::string('getIDString'),
-      'created_time' => ApiField::string('getCreatedTime'),
-      'updated_time' => ApiField::string('getUpdatedTime'),
-      'status' => ApiField::string('getStatus'),
-      'title' => ApiField::string('getTitle'),
-      'description' => ApiField::string('getDescription'),
+      'id' => ApiField::scalar('getIDString'),
+      'created_time' => ApiField::scalar('getCreatedTime'),
+      'updated_time' => ApiField::scalar('getUpdatedTime'),
+      'status' => ApiField::scalar('getStatus'),
+      'title' => ApiField::scalar('getTitle'),
+      'description' => ApiField::scalar('getDescription'),
       'creator' => ApiField::node('getCreatorID', ApiUserNode::class),
       'owner' => ApiField::node('getOwnerID', ApiUserNode::class),
-      'priority' => ApiField::string('getPriority'),
+      'priority' => ApiField::scalar('getPriority'),
       'tags' => ApiField::edge(ApiTaskTagsEdge::class),
       'subscribers' => ApiField::edge(ApiTaskSubscribersEdge::class),
       'activities' => ApiField::edge(ApiTaskActivitiesEdge::class),

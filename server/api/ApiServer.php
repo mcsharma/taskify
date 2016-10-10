@@ -45,11 +45,10 @@ final class ApiServer {
 
     $node = await NodeBase::genDynamic($viewer_id, $node_id);
     $api_node_class = IDUtil::nodeClassToApiNodeClass(get_class($node));
-    $api_node = new $api_node_class();
-    await $api_node
+    $api_node = (new $api_node_class())
       ->setViewerID($viewer_id)
       ->setFieldsTree($fields)
-      ->genSetRootNodeID($node_id);
+      ->setRawFieldValue($node);
 
     $res = await $api_node->genResult();
     if ($res === null) {
