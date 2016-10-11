@@ -27,6 +27,9 @@ final class ApiActivityNode extends ApiNode<Activity> {
       'new_status' => ApiField::scalar('getNewStatus'),
       'old_priority' => ApiField::scalar('getOldPriority'),
       'new_priority' => ApiField::scalar('getNewPriority'),
+      // TODO Implement ApiField::list and return list of nodes instead of list of ids.
+      'added_tags' => ApiField::listOfNodes('getAddedTagIDs', ApiTagNode::class),
+      'removed_tags' => ApiField::listOfNodes('getRemovedTagIDs', ApiTagNode::class),
     };
   }
 

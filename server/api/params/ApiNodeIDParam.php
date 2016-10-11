@@ -2,13 +2,18 @@
 
 require_once('ApiParamBase.php');
 
+// TODO accept node type in constructor
 final class ApiNodeIDParam extends ApiParamBase {
 
   private bool $allowZero = false;
 
-  protected async function genProcess(string $value): Awaitable<int> {
-    $this->throwUnless(ctype_digit($value), 'Must be an integer');
-    $id = (int)$value;
+  protected async function genProcess(mixed $value): Awaitable<int> {
+    $id = $value;
+    if (is_string($id)) {
+      $this->throwUnless(ctype_digit($id), 'Must be an integer');
+      $id = (int)$id;
+    }
+    invariant(is_int($id), 'Must be an integer');
     $this->throwUnless(
       IDUtil::isValidID($id) || ($this->allowZero && $id === 0),
       'Invalid object ID',

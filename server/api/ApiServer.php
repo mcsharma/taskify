@@ -130,8 +130,7 @@ final class ApiServer {
     $processed_params_wrapped_result = await \HH\Asio\mmkw(
       $api_class_obj->paramDefinitions(),
       async ($name, $definition) ==> {
-        $definition->setName($name);
-        return await $definition->genProcessParam(
+        return await $definition->setName($name)->genProcessParam(
           $params->containsKey($name) ? $params[$name] : null,
         );
       },

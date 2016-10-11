@@ -15,10 +15,7 @@ abstract class EdgeBase<T as NodeBase> {
   }
 
   final public async function genNodes(): Awaitable<Vector<T>> {
-    $edges = await TaskifyDB::genEdgesForType(
-      $this->sourceID,
-      $this->getEdgeType()
-    );
+    $edges = await $this->genIDs();
     $node_type = $this->getTargetNodeType();
     $nodes = Vector {};
     foreach ($edges as $edge) {
@@ -29,5 +26,20 @@ abstract class EdgeBase<T as NodeBase> {
     }
 
     return $nodes;
+  }
+
+  final public async function genIDs(): Awaitable<Vector<Map<string, mixed>>> {
+    $res = await TaskifyDB::genEdgesForType(
+      $this->sourceID,
+      $this->getEdgeType(),
+    );
+    return $res->map($data ==> {
+      $mixed_data = new Map($data);
+      $mixed_data['id2'] = (int)$mixed_data['id2'];
+      // TODO typecast timestamps to ints too once they are mvoed to ints
+      // and then change the typehint to Map<string, int>
+      return $mixed_data;
+    });
+
   }
 }

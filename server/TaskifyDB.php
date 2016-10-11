@@ -27,9 +27,13 @@ final class TaskifyDB {
         // Note: There seems to be a problem with queryf() function. It is
         // apparently crashing hhvm and no stacktrace provided. That's why
         // queryf is used everywhere.
-        $result = await $conn->query('SELECT * from '.$table.' WHERE id = '.$id);
+        $result = await $conn->query(sprintf(
+          "SELECT * FROM %s WHERE id = %d AND is_deleted = 0",
+          $table,
+          $id,
+        ));
         // There shouldn't be more than one row returned for one user id
-        invariant($result->numRows() === 1, 'one row exactly');
+        invariant($result->numRows() === 1, "error fetching %d one row exactly", $id);
         // A vector of vector objects holding the string values of each column
         // in the query
         return $result->mapRows()[0];
@@ -45,7 +49,7 @@ final class TaskifyDB {
         // Note: There seems to be a problem with queryf() function. It is
         // apparently crashing hhvm and no stacktrace provided. That's why
         // queryf is used everywhere.
-        $result = await $conn->query(sprintf("SELECT * from %s LIMIT %d", $table, $limit));
+        $result = await $conn->query(sprintf("SELECT * from %s WHERE is_deleted = 0 LIMIT %d", $table, $limit));
         // A vector of vector objects holding the string values of each column
         // in the query
 
@@ -62,14 +66,12 @@ final class TaskifyDB {
       int $edgeType,
     ): Awaitable<?Map<string, string>> {
       $conn = await self::genConnection();
-      $result = await $conn->query(
-        'SELECT id2, created_time, updated_time, data from edge WHERE type = '.
-          $edgeType.
-          ' AND id1 = '.
-          $id1.
-          ' AND id2 = '.
-          $id2
-      );
+      $result = await $conn->query(sprintf(
+        "SELECT id2, created_time, updated_time, data FROM edge WHERE is_deleted = 0 AND type = %d AND id1 = %d AND id2 = %d",
+        $edgeType,
+        $id1,
+        $id2,
+      ));
       invariant($result->numRows() <= 1, "Shouldn't be more than one edge");
       if ($result->numRows() === 1) {
         // edge exists
@@ -84,8 +86,8 @@ final class TaskifyDB {
       EdgeType $edgeType,
     ): Awaitable<bool> {
       $conn = await self::genConnection();
-      $response = await $conn->query(
-        sprintf('SELECT COUNT(1) FROM edge WHERE id1 = %d AND id2 = %d AND type = %d',
+      $response = await $conn->query(sprintf(
+        'SELECT COUNT(1) FROM edge WHERE is_deleted = 0 AND id1 = %d AND id2 = %d AND type = %d',
         $id1,
         $id2,
         (int)$edgeType,
@@ -98,12 +100,11 @@ final class TaskifyDB {
       EdgeType $edgeType,
     ): Awaitable<Vector<Map<string, string>>> {
       $conn = await self::genConnection();
-      $result = await $conn->query(
-        'SELECT id2, created_time, updated_time, data from edge WHERE type = '.
-          $edgeType.
-          ' AND id1 = '.
+      $result = await $conn->query(sprintf(
+        'SELECT id2, created_time, updated_time, data from edge WHERE is_deleted = 0 AND type = %d AND id1 = %d',
+          $edgeType,
           $id1
-      );
+      ));
       return $result->mapRows();
     }
 
@@ -137,6 +138,8 @@ final class TaskifyDB {
           $value_str = sprintf('"%s"', $value);
         } else if (is_int($value)) {
           $value_str = (string)$value;
+        } else if (is_array($value) && array_values($value) === $value) {
+          $value_str = sprintf("JSON_ARRAY(%s)", substr(json_encode($value), 1, -1));
         } else  {
           invariant_violation('Unimplemented field type found in in genUpdateNode');
         }
@@ -182,6 +185,31 @@ final class TaskifyDB {
         await $conn->query(sprintf(
           "INSERT INTO edge (id1, id2, type, data) VALUES (%d, %d, %d, '%s')",
           $id1, $id2, (int)$edge_type, $json_data,
+        ));
+      }
+    }
+
+    public static async function genDeleteEdge(
+      EdgeType $edge_type,
+      int $id1,
+      int $id2,
+    ): Awaitable<void> {
+      $edge_exists = await self::genEdgeExists($id1, $id2, $edge_type);
+      if (!$edge_exists) {
+        throw new Exception('Edge already deleted');
+      }
+      $conn = await self::genConnection();
+      $inverse_type = EdgeUtil::getInverse($edge_type);
+      if ($inverse_type !== null) {
+        await $conn->query(sprintf(
+          "UPDATE edge SET is_deleted = 1 WHERE (type = %d AND id1 = %d AND id2 = %d) OR (type = %d AND id1 = %d AND id2 = %d)",
+          $edge_type, $id1, $id2,
+          $inverse_type, $id2, $id1,
+        ));
+      } else {
+        await $conn->query(sprintf(
+          "UPDATE edge SET is_deleted = 1 WHERE type = %d AND id1 = %d AND id2 = %d",
+          $edge_type, $id1, $id2,
         ));
       }
     }

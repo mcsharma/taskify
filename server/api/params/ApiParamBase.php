@@ -6,12 +6,12 @@ abstract class ApiParamBase {
   protected bool $isRequired = false;
   protected mixed $defaultValue;
 
-  public async function genProcessParam(?string $value): Awaitable<mixed> {
+  public async function genProcessParam(mixed $value): Awaitable<mixed> {
     if ($this->isRequired() && $value === null) {
       throw new Exception('Parameter is required');
     }
     if ($value !== null) {
-      $value = await $this->genProcess($value);
+     $value = await $this->genProcess($value);
     }
     if ($value === null) {
       $value = $this->defaultValue;
@@ -19,7 +19,7 @@ abstract class ApiParamBase {
     return $value;
   }
 
-  abstract protected function genProcess(string $value): Awaitable<mixed>;
+  abstract protected function genProcess(mixed $value): Awaitable<mixed>;
 
   public function required(): this {
     $this->isRequired = true;

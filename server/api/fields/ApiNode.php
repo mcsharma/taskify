@@ -1,6 +1,7 @@
 <?hh
 
 require_once('ApiScalarField.php');
+require_once('ApiNodeListField.php');
 require_once('ApiEdge.php');
 
 <<__ConsistentConstruct>>
@@ -58,7 +59,9 @@ abstract class ApiNode<+T as NodeBase> extends ApiScalarField {
       }
 
 
-      if ($sub_field_obj instanceof ApiNode || $sub_field_obj instanceof ApiEdge) {
+      if ($sub_field_obj instanceof ApiNode ||
+          $sub_field_obj instanceof ApiEdge ||
+          $sub_field_obj instanceof ApiNodeListField) {
         if ($fields_tree === true) {
           $fields_tree = ImmMap {};
         }

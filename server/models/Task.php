@@ -40,4 +40,16 @@ final class Task extends NodeBase {
   public function getPriority(): Priority {
     return $this->priority;
   }
+
+  public async function genTagIDs(): Awaitable<Vector<int>> {
+    $tags_data = await (new TaskToTagsEdge($this->getViewerID(), $this->getID()))
+      ->genIDs();
+    return $tags_data->map($data ==> (int)$data['id2']);
+  }
+
+  public async function genSubscriberIDs(): Awaitable<Vector<int>> {
+    $subscribers_data = await (new TaskToSubscribersEdge($this->getViewerID(), $this->getID()))
+      ->genIDs();
+    return $subscribers_data->map($data ==> (int)$data['id2']);
+  }
 }
