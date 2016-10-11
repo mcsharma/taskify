@@ -7,6 +7,8 @@ require_once('ServerConfig.php');
 
 final class TaskifyDB {
 
+    const int MAX_FETCH_LIMIT = 10000;
+
     private static async function genConnection(): Awaitable<\AsyncMysqlConnection> {
         // Get a connection pool with default options
         $pool = new \AsyncMysqlConnectionPool(array());
@@ -23,7 +25,7 @@ final class TaskifyDB {
         $table = IDUtil::idToTable($id);
         $conn = await self::genConnection();
         // Note: There seems to be a problem with queryf() function. It is
-        // apparently crashing hhvm and no stacktrace provided. That's why 
+        // apparently crashing hhvm and no stacktrace provided. That's why
         // queryf is used everywhere.
         $result = await $conn->query('SELECT * from '.$table.' WHERE id = '.$id);
         // There shouldn't be more than one row returned for one user id
@@ -31,6 +33,23 @@ final class TaskifyDB {
         // A vector of vector objects holding the string values of each column
         // in the query
         return $result->mapRows()[0];
+    }
+
+    public static async function genNodesForType(
+      NodeType $nodeType,
+      int $limit = self::MAX_FETCH_LIMIT,
+    ): Awaitable<Vector<Map<string, string>>> {
+        $table = IDUtil::typeToTable($nodeType);
+        $conn = await self::genConnection();
+        $limit = min($limit, self::MAX_FETCH_LIMIT);
+        // Note: There seems to be a problem with queryf() function. It is
+        // apparently crashing hhvm and no stacktrace provided. That's why
+        // queryf is used everywhere.
+        $result = await $conn->query(sprintf("SELECT * from %s LIMIT %d", $table, $limit));
+        // A vector of vector objects holding the string values of each column
+        // in the query
+
+        return $result->mapRows();
     }
 
     /**

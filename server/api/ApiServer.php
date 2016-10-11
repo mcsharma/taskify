@@ -30,20 +30,66 @@ final class ApiServer {
         idx($params, 'fbToken'),
       );
     }
-    // From this point we must have a valid authToken.
+
+    // From this point we must have an authorized viewer.
     $viewer_id = await self::genValidateAuthToken(idx($params, 'authToken'));
+
+    // Post request
     if ($params->containsKey('method') &&
         strtolower($params['method']) === 'post') {
       return await self::genProcessPostRequest($viewer_id, $path, $params);
     }
-    $node_id = (int)$path;
-    $type = IDUtil::idToType($node_id);
+
+    // At this point we must have only one fragment in path.
+    if (strpos($path, '/') !== false) {
+      throw new Exception('Invalid request path');
+    }
 
     $fields = $params->contains('fields')
       ? self::parseFieldMap($params['fields'])
       : ImmMap {};
 
-    $node = await NodeBase::genDynamic($viewer_id, $node_id);
+    // Root edge request
+    if (ctype_lower($path)) {
+      $root_edge_name = $path;
+      return await self::genRootEdgeResponse($viewer_id, $root_edge_name, $fields);
+    }
+
+    // Root node request
+    if (ctype_digit($path)) {
+      $root_node_id = (int)$path;
+      return await self::genRootNodeResponse($viewer_id, $root_node_id, $fields);
+    }
+
+    throw new Exception('Invalid request path');
+  }
+
+  private static async function genRootEdgeResponse(
+    int $viewer_id,
+    string $edge_name,
+    ImmMap<string, mixed> $fields,
+  ): Awaitable<Map<string, mixed>> {
+    $edge_name = str_replace('_', '', $edge_name);
+    $class_name = strtolower('api'.$edge_name.'edge');
+    $post_api_classes = ApiList::rootEdges();
+    $matched_api_classname = null;
+    foreach ($post_api_classes as $api_class) {
+        if (strtolower((string)$api_class) === $class_name) {
+          $matched_api_classname = $api_class;
+        }
+    }
+    invariant($matched_api_classname !== null, 'No Api class matched the given path');
+    return await (new $matched_api_classname($viewer_id))
+      ->setFieldsTree($fields)
+      ->genResult();
+  }
+
+  private static async function genRootNodeResponse(
+    int $viewer_id,
+    int $root_node_id,
+    ImmMap<string, mixed> $fields,
+  ): Awaitable<Map<string, mixed>> {
+    $node = await NodeBase::genDynamic($viewer_id, $root_node_id);
     $api_node_class = IDUtil::nodeClassToApiNodeClass(get_class($node));
     $api_node = (new $api_node_class())
       ->setViewerID($viewer_id)

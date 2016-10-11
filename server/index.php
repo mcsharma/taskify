@@ -1,6 +1,7 @@
 <?hh
 // Nothing must be placed before this call.
 set_error_handler(get_error_handler());
+set_exception_handler(get_exception_handler());
 
 require_once('api/ApiServer.php');
 
@@ -21,7 +22,9 @@ if ($query_string !== '') {
     $params_map[$key] = $value;
   }
 }
-if (substr($path, 0, 4) === 'api/') {
+if ($path === '') {
+  echo 'Taskify API Server';
+} else if (substr($path, 0, 4) === 'api/') {
   $api_path = substr($path, 4);
   try {
     $res = \HH\Asio\join(ApiServer::genResponseJson($api_path, new ImmMap($params_map)));
@@ -32,7 +35,7 @@ if (substr($path, 0, 4) === 'api/') {
     });
   }
 } else {
-  echo 'Taskify API Server';
+  throw new Exception('Unknown path');
 }
 
 
@@ -53,5 +56,11 @@ function get_error_handler() {
     }
     echo '<br/><b>'.$errorLevel.'</b>: '.$message.' in <b>'.
       $errfile.'</b> on line <b>'.$errline.'</b><br/>';
+  };
+}
+
+function get_exception_handler() {
+  return function ($exception) {
+    echo "<b>Uncaught Exception: </b>".$exception->getMessage();
   };
 }

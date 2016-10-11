@@ -14,18 +14,18 @@ abstract class EdgeBase<T as NodeBase> {
     return $this->viewerID;
   }
 
-  final public async function genNodes(): Awaitable<Map<int, T>> {
+  final public async function genNodes(): Awaitable<Vector<T>> {
     $edges = await TaskifyDB::genEdgesForType(
       $this->sourceID,
       $this->getEdgeType()
     );
     $node_type = $this->getTargetNodeType();
-    $nodes = Map {};
+    $nodes = Vector {};
     foreach ($edges as $edge) {
       $id2 = (int)$edge['id2'];
       // TODO avoid await in a loop
       $node = await $node_type::gen($this->viewerID, $id2);
-      $nodes[$id2] = $node;
+      $nodes[] = $node;
     }
 
     return $nodes;
