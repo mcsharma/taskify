@@ -9,8 +9,9 @@ import {PriorityEnum,Priority} from './metadata/Priority';
 
 // Be sure to include styles at some point, probably during your bootstrapping
 import 'react-select/dist/react-select.css';
-import Option = ReactSelectClass.Option;
 import ReactSelectClass = require("react-select");
+import PrefetchedDataKeeper from "./PrefechedDataKeeper";
+import Option = ReactSelectClass.Option;
 
 interface Props {
     task: Task;
@@ -30,19 +31,36 @@ interface State {
 
 export function getTaskFields(): string {
     return 'id,created_time,updated_time,title,description,status,owner,priority,tags,subscribers,activities{'+
-      'id,task,actor,changed,old_title,new_title,old_description,new_description,new_status,old_priority,new_priority' +
-        '}';
+        'id,task,actor,changed,old_title,new_title,old_description,new_description,new_status,old_priority,new_priority,' +
+            'added_tags,removed_tags,added_subscribers,removed_subscribers}';
 }
 
 export class TaskDetail extends React.Component<Props, State> {
 
     constructor(props: Props) {
         super(props);
-        this.state = {};
+        this.state = TaskDetail.prepareInitialState(props);
     }
 
     componentWillReceiveProps(newProps: Props) {
-        this.state = {};
+        this.state = TaskDetail.prepareInitialState(newProps);
+    }
+
+    private static prepareInitialState(props: Props): State {
+        return {
+            tags: props.task.getTags()!.map(tag => {
+                return {
+                    value: tag.getID(),
+                    label: tag.getCaption() || '',
+                };
+            }),
+            subscribers: props.task.getSubscribers()!.map(user => {
+                return {
+                    value: user.getID(),
+                    label: user.getName() || '',
+                };
+            })
+        };
     }
 
     public render() {
@@ -55,6 +73,7 @@ export class TaskDetail extends React.Component<Props, State> {
         let savedTask = this.getSavedTask(),
             hasChange = this.hasChange();
 
+        console.log(PrefetchedDataKeeper.getTagTypeaheadOptions(), PrefetchedDataKeeper.getUserTypeaheadOptions());
         return (
             <div className="task-detail"
                  style={{backgroundColor: hasChange ? 'lightyellow' : 'white'}}>
@@ -101,15 +120,15 @@ export class TaskDetail extends React.Component<Props, State> {
                 </div>
                 <Select multi={true}
                         clearable={false}
-                        options={this.getTags()}
-                        value={this.getTags()}
+                        options={PrefetchedDataKeeper.getTagTypeaheadOptions()}
+                        value={this.state.tags}
                         placeholder="Add some tags.."
                         onChange={(options: Option[]) => options ? this.onTagsChange(options) : null}
                 />
                 <Select multi={true}
                         clearable={false}
-                        options={this.getSubscribers()}
-                        value={this.getSubscribers()}
+                        options={PrefetchedDataKeeper.getUserTypeaheadOptions()}
+                        value={this.state.subscribers}
                         placeholder="Add subscribers.."
                         onChange={(options: Option[]) => options ? this.onSubscribersChange(options) : null}
                 />
@@ -130,7 +149,33 @@ export class TaskDetail extends React.Component<Props, State> {
         return this.state.title !== void 0 && this.state.title !== savedTask.getTitle() ||
             this.state.status !== void 0 && this.state.status !== savedTask.getStatus() ||
             this.state.priority != void 0 && this.state.priority !== savedTask.getPriority() ||
-            this.state.description != void 0 && this.state.description !== savedTask.getDescription();
+            this.state.description != void 0 && this.state.description !== savedTask.getDescription() ||
+            this.haveTagsChanged() ||
+            this.haveSubscribersChanged();
+    }
+
+    private haveTagsChanged(): boolean {
+        let currentTags = _.reduce(this.state.tags || [], (set: any, tag: Option) => {
+                set[tag.value] = 1;
+                return set;
+            }, {}),
+            savedTags = _.reduce(this.getSavedTask().getTags() || [], (set: any, tag: Tag) => {
+                set[tag.getID()] = 1;
+                return set;
+            }, {});
+        return !_.isEqual(currentTags, savedTags);
+    }
+
+    private haveSubscribersChanged(): boolean {
+        let currentSubscribers = _.reduce(this.state.subscribers || [], (set: any, user: Option) => {
+                set[user.value] = 1;
+                return set;
+            }, {}),
+            savedSubscribers = _.reduce(this.getSavedTask().getSubscribers() || [], (set: any, user: User) => {
+                set[user.getID()] = 1;
+                return set;
+            }, {});
+        return !_.isEqual(currentSubscribers, savedSubscribers);
     }
 
     private onTitleChange(event: React.FormEvent<HTMLInputElement>) {
@@ -180,6 +225,13 @@ export class TaskDetail extends React.Component<Props, State> {
             params.set('priority', this.state.priority);
         }
 
+        if (this.haveTagsChanged()) {
+            params.set('tags', JSON.stringify(this.state.tags!.map(option => option.value)));
+        }
+        if (this.haveSubscribersChanged()) {
+            params.set('subscribers', JSON.stringify(this.state.subscribers!.map(option => option.value)))
+        }
+
         // TODO correctly handle the failure
         API.post(this.props.task.getID(), params)
             .then(() => this.fetchLatestTask())
@@ -226,30 +278,5 @@ export class TaskDetail extends React.Component<Props, State> {
     private getPriority() {
         return this.state.priority || this.getSavedTask().getPriority();
     }
-
-    private getTags(): Option[] {
-        if (this.state.tags !== void 0) {
-            return this.state.tags;
-        }
-        return this.getSavedTask().getTags()!.map((tag) => {
-            return {
-                value: tag.getID(),
-                label: tag.getCaption() || '',
-            };
-        });
-    }
-
-    private getSubscribers(): Option[] {
-        if (this.state.subscribers !== void 0) {
-            return this.state.subscribers;
-        }
-        return this.getSavedTask().getSubscribers()!.map((user) => {
-            return {
-                value: user.getID(),
-                label: user.getName() || '',
-            };
-        });
-    }
-
 }
 

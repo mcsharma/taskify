@@ -10,15 +10,17 @@
         <!-- Main -->
         <!-- Webpack output files are served directly on /, so we
           don't need  ./dist/ prefix for generated files -->
-        <link rel="stylesheet" href="css/bundle.css"></link>
-        <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.css"></link>
+        <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.css" />
         <script src="./node_modules/axios/dist/axios.js"></script>
-        <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+        <script src="./node_modules/jquery/dist/jquery.js"></script>
         <script src="./node_modules/lodash/lodash.js"></script>
         <script src="./node_modules/react/dist/react.js"></script>
         <script src="./node_modules/react-dom/dist/react-dom.js"></script>
         <script src="./node_modules/react-dom/dist/react-dom.js"></script>
         <script src="./node_modules/urijs/src/URI.js"></script>
+        <!--Apparently webpack will serve files in output directory as if they were in content base root directory. -->
+        <!--So instead of specifying ./dist/js/app.bundle.js we just specify ./js/app.bundle.js-->
         <script src="js/app.bundle.js"></script>
+        <link rel="stylesheet" href="css/bundle.css" />
     </body>
 </html>

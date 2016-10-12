@@ -1,7 +1,7 @@
 import axios from 'axios';
 import {Promise} from "axios";
 import * as URI from "urijs";
-import AuthTokenKeeper from "../AuthTokenKeeper";
+import AuthTokenKeeper from '../AuthTokenKeeper';
 
 export function get<T>(nodeID: string, fields: string): Promise<T>  {
     let uri = URI('/api').segment(nodeID);

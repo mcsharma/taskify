@@ -50,6 +50,10 @@ export interface IActivity extends INode {
     new_status?: string;
     old_priority?: string;
     new_priority?: string;
+    added_tags?: ITag[];
+    removed_tags?: ITag[];
+    added_subscribers?: IUser[];
+    removed_subscribers?: IUser[];
 }
 
 export class NodeBase<T extends INode> {
@@ -249,11 +253,35 @@ export class Activity extends NodeBase<IActivity> {
 
     private actor: User;
     private task: Task;
+    private addedTags: Tag[];
+    private removedTags: Tag[];
+    private addedSubscribers: User[];
+    private removedSubscribers: User[];
 
     constructor(json: IActivity) {
         super(json);
         this.actor = new User(json.actor);
         this.task = new Task(json.task);
+        if (json.added_tags) {
+            this.addedTags = json.added_tags.map((tagJson) => {
+                return new Tag(tagJson);
+            });
+        }
+        if (json.removed_tags) {
+            this.removedTags = json.removed_tags.map((tagJson) => {
+                return new Tag(tagJson);
+            });
+        }
+        if (json.added_subscribers) {
+            this.addedSubscribers = json.added_subscribers.map((userJson) => {
+                return new User(userJson);
+            });
+        }
+        if (json.removed_subscribers) {
+            this.removedSubscribers = json.removed_subscribers.map((userJson) => {
+                return new User(userJson);
+            });
+        }
     }
 
     getChanged() {
@@ -286,6 +314,22 @@ export class Activity extends NodeBase<IActivity> {
 
     getNewPriority() {
         return this.json.new_priority;
+    }
+
+    getAddedTags() {
+        return this.addedTags;
+    }
+
+    getRemovedTags() {
+        return this.removedTags;
+    }
+
+    getAddedSubscribers() {
+        return this.addedSubscribers;
+    }
+
+    getRemovedSubscribers() {
+        return this.removedSubscribers;
     }
 
     getActor() {

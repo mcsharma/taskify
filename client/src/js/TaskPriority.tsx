@@ -7,7 +7,6 @@ interface Props {
 }
 
 interface State {}
-
 export default class TaskPriority extends React.Component<Props, State> {
 
     constructor(props: Props) {

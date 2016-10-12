@@ -1,12 +1,15 @@
+import axios from 'axios';
 import * as React from "react";
 import TaskPanel from "./TaskPanel";
 import * as API from './api/API';
 import AuthTokenKeeper from './AuthTokenKeeper';
+import {IEdge, IUser, Tag, ITag, User} from "./models/models";
+import PrefetchedDataKeeper from "./PrefechedDataKeeper";
 
 interface Props {
 }
 interface State {
-    status?: "logged_out" | "login_pending" | "logged_in" | "error";
+    status?: "logged_out" | "login_pending" | "logged_in" | "error" | "ready";
     fbid?: string;
     userID?: number;
     fbToken?: string;
@@ -50,7 +53,20 @@ export class Root extends React.Component<Props, State> {
                     this.setState({status: 'error'});
                 });
         }
-
+        if (this.state.status === 'logged_in') {
+            let userParams = new Map(),
+                tagParams = new Map();
+            userParams.set('fields', 'id,name');
+            tagParams.set('fields', 'id,caption');
+            axios.all([
+                API.getGeneric('users', userParams),
+                API.getGeneric('tags', tagParams)
+            ]).then((response: any) => {
+                PrefetchedDataKeeper.keepAllUsers(response[0].nodes.map((user: IUser) => new User(user)));
+                PrefetchedDataKeeper.keepAllTags(response[1].nodes.map((tag: ITag) => new Tag(tag)));
+                this.setState({status: 'ready'});
+            });
+        }
     }
 
     checkForLogin() {
@@ -100,6 +116,10 @@ export class Root extends React.Component<Props, State> {
         }
         if (this.state.status === 'error') {
             return <div>Error occurred!</div>
+        }
+        if (this.state.status === 'logged_in') {
+            // Now show loading indicator until we have fetched some data like all users and tags.
+            return <div>Preparing the tool</div>;
         }
         let userID: number = this.state.userID as number;
         return (

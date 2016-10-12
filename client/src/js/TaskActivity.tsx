@@ -1,5 +1,6 @@
 import * as React from "react";
 import {Activity} from "./models/models";
+import TaskPriority from "./TaskPriority";
 
 interface State {}
 
@@ -17,33 +18,64 @@ export default class TaskActivity extends React.Component<Props, State> {
     public render() {
         let activity = this.props.activity;
         let from: any = null, to: any = null;
+        let line: any | null = null;
         switch (activity.getChanged()) {
             // TODO add TaskField enum in JS code that matches exactly with server enum
             case 'title':
-                from = activity.getOldTitle();
-                to = activity.getNewTitle();
+                line = <span>changed the title from {activity.getOldTitle()} to {activity.getNewTitle()}</span>;
                 break;
             case 'description':
-                from = activity.getOldDescription();
-                to = activity.getNewDescription();
+                line = <span>changed the description from {activity.getOldDescription()} to {activity.getNewDescription()}</span>;
                 break;
             case 'status':
-                to = activity.getNewStatus();
+                if (activity.getNewStatus() == 'open') {
+                    line = <span>reopened the task</span>;
+                } else {
+                    line = <span>closed the task</span>
+                }
                 break;
             case 'priority':
-                from = activity.getOldPriority();
-                to = activity.getNewPriority();
+                line = <span>changed the priority to {activity.getNewPriority()}</span>;
+                break;
+            case 'tags':
+                let addedList: string = '', removedList: string = '';
+                if (!!activity.getAddedTags()) {
+                    addedList = activity.getAddedTags().map((tag) => tag.getCaption()).join(', ');
+                }
+                if (!!activity.getRemovedTags()) {
+                    removedList = activity.getRemovedTags().map(tag => tag.getCaption()).join(', ');
+                }
+                if (addedList && removedList) {
+                    line = <span>changed the tags: added {addedList}, removed {removedList}</span>;
+                } else if (addedList) {
+                    line = <span>added tags {addedList}</span>;
+                } else if (removedList) {
+                    line = <span>removed tags {removedList}</span>;
+                }
+                break;
+            case 'subscribers':
+                let addedSubscribers: string = '', removedSubscribers: string = '';
+                if (!!activity.getAddedSubscribers()) {
+                    addedSubscribers = activity.getAddedSubscribers().map(user => user.getName()).join(', ');
+                }
+                if (!!activity.getRemovedSubscribers()) {
+                    removedSubscribers = activity.getRemovedSubscribers().map(user => user.getName()).join(', ');
+                }
+                if (addedSubscribers && removedSubscribers) {
+                    line = <span>changed the subscribers: added {addedSubscribers}, removed {removedSubscribers}</span>;
+                } else if (addedSubscribers) {
+                    line = <span>added subscribers {addedSubscribers}</span>;
+                } else if (removedSubscribers) {
+                    line = <span>removed subscribers {removedSubscribers}</span>;
+                }
                 break;
             default:
                 console.error("unhandled activity type ", activity.getChanged());
         }
         return (
             <div className="tk-activity">
-                <strong>{activity.getActor().getName()}</strong>
-                &nbsp;changed the {activity.getChanged()}
-                {from ? <span>&nbsp;from <strong>{from}</strong></span> : null}
-                &nbsp;to <strong>{to}</strong>
-                .
+                <strong>{activity.getActor().getName()}</strong>{' '}
+                {line}
             </div>
         );
     }

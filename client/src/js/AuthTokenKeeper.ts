@@ -1,4 +1,5 @@
 
+// TODO(mahesh): store token in cookie too.
 export default class AuthTokenKeeper {
 
     private static authToken: string;
