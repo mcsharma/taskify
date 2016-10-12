@@ -176,6 +176,8 @@ final class TaskifyDB {
       $json_data = json_encode($data);
       $conn = await self::genConnection();
       if ($inverse_type !== null) {
+        // TODO add ON DUPLiCATE kEY UPDATE so that we dont' create duplicaete
+        // rows
         await $conn->query(sprintf(
           "INSERT INTO edge (id1, id2, type, data) VALUES (%d, %d, %d, '%s'), (%d, %d, %d, '%s')",
           $id1, $id2, (int)$edge_type, $json_data,

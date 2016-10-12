@@ -20,7 +20,6 @@ final class ApiVectorParam extends ApiParamBase {
       }
       $res[] = $item;
     }
-    echo $res;
     return $res;
   }
 }

@@ -58,6 +58,35 @@ final class ApiTaskPost extends ApiPostBase {
       $params->remove('tags');
     }
 
+    if ($params->contains('subscribers')) {
+      $old_subscribers = await $task->genSubscriberIDs();
+      $old_subscribers = $old_subscribers->toArray();
+      $new_subscribers = $params['subscribers'];
+      invariant($new_subscribers instanceof Vector, 'for hack');
+      $new_subscribers = $new_subscribers->toArray();
+      $added_subscribers = array_values(array_diff($new_subscribers, $old_subscribers));
+      $removed_subscribers = array_values(array_diff($old_subscribers, $new_subscribers));
+
+      if (count($added_subscribers) > 0 || count($removed_subscribers) > 0) {
+        foreach ($added_subscribers as $added_subscriber) {
+          await TaskifyDB::genCreateEdge(EdgeType::TASK_TO_SUBSCRIBER, $node_id, $added_subscriber);
+        }
+        foreach ($removed_subscribers as $removed_subscriber) {
+          await TaskifyDB::genDeleteEdge(EdgeType::TASK_TO_SUBSCRIBER, $node_id, $removed_subscriber);
+        }
+        $activity_id = await TaskifyDB::genCreateNode(NodeType::ACTIVITY, Map {
+          'task_id' => $node_id,
+          'actor_id' => $actor_id,
+          'changed' => TaskField::SUBSCRIBERS,
+          'added' => $added_subscribers,
+          'removed' => $removed_subscribers,
+        });
+        await TaskifyDB::genCreateEdge(EdgeType::ACTIVITY_TO_ACTOR, $activity_id, $actor_id);
+        await TaskifyDB::genCreateEdge(EdgeType::ACTIVITY_TO_TASK, $activity_id, $node_id);
+      }
+      $params->remove('subscribers');
+    }
+
     await TaskifyDB::genUpdateNode($node_id, $params);
     $updated_task = await Task::gen($this->getViewerID(), $node_id);
     if ($updated_task->getTitle() !== $task->getTitle()) {

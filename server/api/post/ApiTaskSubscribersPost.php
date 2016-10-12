@@ -17,6 +17,7 @@ final class ApiTaskSubscribersPost extends ApiPostBase {
     Map<string, mixed> $params,
   ): Awaitable<Map<string, mixed>> {
     $subscriber_id = (int)$params['subscriber_id'];
+    // TODO create actiivity here too
     await TaskifyDB::genCreateEdge(
       EdgeType::TASK_TO_SUBSCRIBER,
       $task_id,

@@ -17,19 +17,27 @@ final class ApiActivityNode extends ApiNode<Activity> {
       'id' => ApiField::scalar('getIDString'),
       'created_time' => ApiField::scalar('getCreatedTime'),
       'updated_time' => ApiField::scalar('getUpdatedTime'),
+
       'actor' => ApiField::node('getActorID', ApiUserNode::class),
       'task' => ApiField::node('getTaskID', ApiTaskNode::class),
       'changed' => ApiField::scalar('getChangedField'),
+
       'old_title' => ApiField::scalar('getOldTitle'),
       'new_title' => ApiField::scalar('getNewTitle'),
+
       'old_description' => ApiField::scalar('getOldDescription'),
       'new_description' => ApiField::scalar('getNewDescription'),
+
       'new_status' => ApiField::scalar('getNewStatus'),
+
       'old_priority' => ApiField::scalar('getOldPriority'),
       'new_priority' => ApiField::scalar('getNewPriority'),
-      // TODO Implement ApiField::list and return list of nodes instead of list of ids.
+
       'added_tags' => ApiField::listOfNodes('getAddedTagIDs', ApiTagNode::class),
       'removed_tags' => ApiField::listOfNodes('getRemovedTagIDs', ApiTagNode::class),
+
+      'added_subscribers' => ApiField::listOfNodes('getAddedSubscriberIDs', ApiUserNode::class),
+      'removed_subscribers' => ApiField::listOfNodes('getRemovedSubscriberIDs', ApiUserNode::class),
     };
   }
 
