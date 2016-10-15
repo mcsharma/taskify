@@ -3,8 +3,8 @@ import {Promise} from "axios";
 import * as URI from "urijs";
 import AuthTokenKeeper from '../AuthTokenKeeper';
 
-export function get<T>(nodeID: string, fields: string): Promise<T>  {
-    let uri = URI('/api').segment(nodeID);
+export function get<T>(nodeID: number, fields: string): Promise<T>  {
+    let uri = URI('/api').segment(nodeID.toString());
     uri.setQuery('authToken', AuthTokenKeeper.getAuthToken());
     if (fields) {
         uri.setQuery('fields', fields);

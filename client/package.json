@@ -4,6 +4,7 @@
   "description": "A task management tool!",
   "main": "./dist/bundle.js",
   "dependencies": {
+    "@types/classnames": "0.0.31",
     "@types/jquery": "^1.10.31",
     "@types/lodash": "^4.14.34",
     "@types/react": "^0.14.34",
@@ -12,11 +13,13 @@
     "@types/urijs": "^1.15.30",
     "axios": "^0.14.0",
     "bootstrap": "^3.3.7",
+    "classnames": "^2.2.5",
     "jquery": "^3.1.0",
     "lodash": "^4.15.0",
-    "react": "^15.3.1",
-    "react-dom": "^15.3.1",
-    "react-select": "^1.0.0-rc.1",
+    "react": "^15.3.2",
+    "react-bootstrap": "^0.30.5",
+    "react-dom": "^15.3.2",
+    "react-select": "^1.0.0-rc.2",
     "urijs": "^1.18.1"
   },
   "devDependencies": {

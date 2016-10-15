@@ -2,6 +2,7 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import {Root} from "./Root";
 import "../css/app.less";
+import 'react-select/dist/react-select.css';
 
 window.fbAsyncInit = function () {
     FB.init({

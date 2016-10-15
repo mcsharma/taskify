@@ -1,0 +1,67 @@
+@import "colors";
+
+.tk-panel {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    .tk-list {
+        flex: 0 0 600px;
+        border-right: 2px solid @grey-border;
+        .task-composer {
+            height: 48px;
+            padding: 8px;
+            display: flex;
+            .task-title-draft {
+                flex-grow: 1;
+                font-size: 20px;
+            }
+            .create-button {
+                border: none;
+                color: white;
+                background-color: @color-primary;
+                border-radius: 2px;
+                padding: 5px 10px;
+            }
+            .create-button:hover {
+                background-color: @color-primary-hover;
+            }
+            .create-button:disabled {
+                background-color: @color-primary-disabled;
+            }
+        }
+        .task-table {
+            border-top: 2px solid @grey-border;
+            thead th {
+                border-color: @grey-border;
+            }
+            .task-panel-row {
+                display: flex;
+                cursor: pointer;
+                height: 35px;
+                td {
+                    border: none;
+                }
+                &.selected-row {
+                    background-color: @color-primary;
+                    color: white;
+                }
+                .tk-header-owner, .col-owner {
+                    width: 125px;
+                }
+                .tk-header-priority, .col-priority {
+                    width: 100px;
+                }
+                .tk-header-last-update, .col-last-update {
+                    width: 150px;
+                }
+                .tk-header-title, .col-title {
+                    flex-grow: 1;
+                }
+            }
+        }
+    }
+    .selected-task-details {
+        flex-grow: 1;
+        overflow-y: auto;
+    }
+}

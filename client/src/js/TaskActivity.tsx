@@ -1,6 +1,5 @@
 import * as React from "react";
 import {Activity} from "./models/models";
-import TaskPriority from "./TaskPriority";
 
 interface State {}
 
@@ -36,6 +35,17 @@ export default class TaskActivity extends React.Component<Props, State> {
                 break;
             case 'priority':
                 line = <span>changed the priority to {activity.getNewPriority()}</span>;
+                break;
+            case 'owner':
+                if (!!activity.getNewOwner()) {
+                    if (activity.getActor().getID() === activity.getNewOwner()!.getID()) {
+                        line = <span>claimed the task</span>;
+                    } else {
+                        line = <span>assigned the task to {activity.getNewOwner()!.getName()}</span>;
+                    }
+                } else {
+                    line = <span>placed the task up for grabs</span>;
+                }
                 break;
             case 'tags':
                 let addedList: string = '', removedList: string = '';

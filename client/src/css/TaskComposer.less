@@ -1,0 +1,43 @@
+.task-composer {
+	.composer-field {
+		display: flex;
+		margin: 5px 0;
+		&.title {
+			input {
+				flex-grow: 1;
+				height: 32px;
+			}
+		}
+		&.owner {
+			.Select {
+				min-width: 170px;
+			}
+		}
+		&.description {
+			.content {
+				flex-grow: 1;
+				resize: none;
+				border: 1px solid lightgray;
+				border-radius: 3px;
+			}
+		}
+		&.priority {
+			display: flex;
+			align-items: flex-start;
+			.Select {
+				width: 110px;
+				.Select-value {
+					cursor: pointer;
+				}
+			}
+		}
+		&.tags, &.subscribers {
+			.Select {
+				flex-grow: 1;
+			}
+		}
+		.name {
+			width: 130px;
+		}
+	}
+}

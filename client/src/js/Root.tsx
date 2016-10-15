@@ -5,15 +5,19 @@ import * as API from './api/API';
 import AuthTokenKeeper from './AuthTokenKeeper';
 import {IEdge, IUser, Tag, ITag, User} from "./models/models";
 import PrefetchedDataKeeper from "./PrefechedDataKeeper";
+import {Glyphicon} from "react-bootstrap";
+import {Modal, Button, Input} from "react-bootstrap";
+import TaskComposer from "./TaskComposer";
 
 interface Props {
 }
 interface State {
     status?: "logged_out" | "login_pending" | "logged_in" | "error" | "ready";
     fbid?: string;
-    userID?: number;
+    viewerID?: number;
     fbToken?: string;
     authToken?: string;
+    showComposer?: boolean;
 }
 
 export class Root extends React.Component<Props, State> {
@@ -45,9 +49,8 @@ export class Root extends React.Component<Props, State> {
                     this.setState({
                         status: "logged_in",
                         authToken: authResponse.authToken,
-                        userID: authResponse.userID
+                        viewerID: authResponse.viewerID
                     });
-                    console.log("state is now ", this.state);
                 }, (error) => {
                     console.error("auth failed: ", error);
                     this.setState({status: 'error'});
@@ -121,16 +124,23 @@ export class Root extends React.Component<Props, State> {
             // Now show loading indicator until we have fetched some data like all users and tags.
             return <div>Preparing the tool</div>;
         }
-        let userID: number = this.state.userID as number;
+        let viewerID: number = this.state.viewerID as number;
         return (
             <div className="root">
                 <div className="top-bar">Taskify</div>
                 <div className="content">
-                    <div className="side-bar"></div>
+                    <div className="side-bar">
+                        <div className="create-button" onClick={(event) => this.setState({showComposer: true})}>
+                            <Glyphicon glyph="plus"/>
+                        </div>
+                    </div>
                     <div className="main-content">
-                        <TaskPanel userID={userID}/>
+                        <TaskPanel userID={viewerID}/>
                     </div>
                 </div>
+                <TaskComposer viewer={viewerID} show={this.state.showComposer ? true : false}
+                              onCancel={() => this.setState({showComposer: false})}
+                              onPublish={(taskID) => this.setState({showComposer: false})}/>
             </div>
         );
     }

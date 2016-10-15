@@ -1,23 +1,20 @@
 // this is to prevent overscrolling: http://stackoverflow.com/questions/12046315/prevent-overscrolling-of-web-page
-html {
-    overflow: hidden;
-    height: 100%;
-}
-
-body {
-    height: 100%;
-    overflow: auto;
-}
+@import "colors";
+@import "bootstrap-override";
 
 .root {
     height: 100vh;
     display: flex;
     flex-direction: column;
     .top-bar {
+        display: flex;
+        align-items: center;
+        padding-left: 10px;
+        font-weight: bold;
         width: 100%;
-        background-color: #4080ff;
+        background-color: @color-primary;
         color: white;
-        font-size: 16px;
+        font-size: 20px;
         flex: 0 0 40px;
     }
     .content {
@@ -27,38 +24,19 @@ body {
             flex: 0 0 50px;
             background-color: #676767;
             border-right: 1px solid #444444;
+            color: white;
+            font-size: 25px;
+            text-align: center;
+            .create-button {
+                padding: 10px;
+                cursor: pointer;
+            }
+            .create-button:hover {
+                background-color: #343434;
+            }
         }
         .main-content {
             flex-grow: 1;
-            .tk-panel {
-                display: flex;
-                width: 100%;
-                height: 100%;
-                .tk-list {
-                    flex: 0 0 600px;
-                    border-right: 5px solid #efefef;
-                    tr {
-                        display: flex;
-                        cursor: pointer;
-                        .tk-header-owner, .col-owner {
-                            width: 125px;
-                        }
-                        .tk-header-priority, .col-priority {
-                            width: 100px;
-                        }
-                        .tk-header-last-update, .col-last-update {
-                            width: 150px;
-                        }
-                        .tk-header-title, .col-title {
-                            flex-grow: 1;
-                        }
-                    }
-                }
-                .selected-task {
-                    flex-grow: 1;
-                    overflow-y: auto;
-                }
-            }
         }
     }
 }

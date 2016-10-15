@@ -47,12 +47,18 @@ module.exports = {
         "lodash": "_",
         "axios": "axios",
         "urijs": "URI",
-        "jquery": "$"
+        "jquery": "$",
+        "react-bootstrap": "ReactBootstrap",
+        "react-select": "Select",
+        "classnames": "classNames",
+        "react-autosize-input": "AutosizeInput"
+
+
     },
     devServer: {
         proxy: {
             '/api': {
-                target: 'http://localhost:80',
+                target: 'localhost',
                 secure: false
             }
         }

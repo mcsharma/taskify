@@ -3,7 +3,7 @@
 import * as _ from 'lodash';
 
 export interface INode {
-    id: string;
+    id: number;
     created_time?: string;
     updated_time?: string;
 }
@@ -50,6 +50,8 @@ export interface IActivity extends INode {
     new_status?: string;
     old_priority?: string;
     new_priority?: string;
+    old_owner?: IUser;
+    new_owner?: IUser;
     added_tags?: ITag[];
     removed_tags?: ITag[];
     added_subscribers?: IUser[];
@@ -253,6 +255,8 @@ export class Activity extends NodeBase<IActivity> {
 
     private actor: User;
     private task: Task;
+    private oldOwner: User|undefined;
+    private newOwner: User|undefined;
     private addedTags: Tag[];
     private removedTags: Tag[];
     private addedSubscribers: User[];
@@ -262,6 +266,12 @@ export class Activity extends NodeBase<IActivity> {
         super(json);
         this.actor = new User(json.actor);
         this.task = new Task(json.task);
+        if (json.old_owner) {
+            this.oldOwner = new User(json.old_owner);
+        }
+        if (json.new_owner) {
+            this.newOwner = new User(json.new_owner);
+        }
         if (json.added_tags) {
             this.addedTags = json.added_tags.map((tagJson) => {
                 return new Tag(tagJson);
@@ -314,6 +324,14 @@ export class Activity extends NodeBase<IActivity> {
 
     getNewPriority() {
         return this.json.new_priority;
+    }
+
+    getOldOwner() {
+        return this.oldOwner;
+    }
+
+    getNewOwner() {
+        return this.newOwner;
     }
 
     getAddedTags() {

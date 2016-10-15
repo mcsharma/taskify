@@ -1,64 +1,80 @@
+@import "colors";
+
 .task-detail {
     display: flex;
     flex-direction: column;
-    padding: 5px;
-    .top-row {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 20px;
-        .task-title {
-            flex-grow: 1;
-            font-size: 20px;
-            font-weight: bold;
-        }
-        .save-button {
-            margin-right: 10px;
-            border: none;
-            color: white;
-            background-color: #4080ff;
-            border-radius: 2px;
-            padding-top: 5px;
-            padding-left: 10px;
-            padding-right: 10px;
-            padding-bottom: 5px;
-        }
-        .save-button:hover {
-            background-color: #3575ef;
-        }
-        .save-button:disabled {
-            background-color: rgba(68, 132, 255, 0.54);
-        }
+    .task-activities {
+        padding: 8px;
+        flex-grow: 1;
     }
-    .task-field {
-        display: flex;
-        align-items: flex-start;
-        margin: 5px 0 5px 0;
-        &.description {
-            textarea {
-                flex-grow: 1;
-                border: 1px solid lightgray;
-            }
-
+    .task-headers {
+        &.pending-change {
+            background-color: lightyellow;
         }
-        &.priority {
-            display: flex;
-            align-items: flex-start;
-            .Select {
-                width: 110px;
-                .Select-value {
-                    cursor: pointer;
+        .task-headers-inner {
+            padding: 8px;
+            .top-row {
+                display: flex;
+                flex-shrink: 0;
+                justify-content: space-between;
+                margin-bottom: 20px;
+                .task-title {
+                    flex-grow: 1;
+                    font-size: 20px;
+                    font-weight: bold;
+                }
+                .save-button {
+                    width: 60px;
+                    border: none;
+                    color: white;
+                    background-color: @color-primary;
+                    border-radius: 2px;
+                    padding: 5px 10px 6px;
+                }
+                .save-button:hover {
+                    background-color: @color-primary-hover;
+                }
+                .save-button:disabled {
+                    background-color: @color-primary-disabled;
                 }
             }
-        }
-        .name {
-            width: 130px;
-        }
-        input {
-            border: 1px solid transparent;
-        }
-        input:hover, input:focus {
-            border: 1px solid lightgray;
-            outline: none;
+            .task-field {
+                display: flex;
+                align-items: flex-start;
+                margin: 5px 0;
+                flex-shrink: 0;
+                &.owner {
+                    .Select {
+                        min-width: 170px;
+                    }
+                }
+                &.description {
+                    .content {
+                        flex-grow: 1;
+                        resize: none;
+                        border: 1px solid lightgray;
+                        border-radius: 3px;
+                    }
+                }
+                &.priority {
+                    display: flex;
+                    align-items: flex-start;
+                    .Select {
+                        width: 110px;
+                        .Select-value {
+                            cursor: pointer;
+                        }
+                    }
+                }
+                &.tags, &.subscribers {
+                    .Select {
+                        flex-grow: 1;
+                    }
+                }
+                .name {
+                    width: 130px;
+                }
+            }
         }
     }
 }
