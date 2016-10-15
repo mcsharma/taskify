@@ -5,6 +5,9 @@ require('NodeType.php');
 require('EdgeType.php');
 require_once('ServerConfig.php');
 
+// Note: There seems to be a problem with queryf() function. It is
+// apparently crashing hhvm and with stacktrace provided. That's why
+// query() is used everywhere in this file with escapeString() explicitly called.
 final class TaskifyDB {
 
     const int MAX_FETCH_LIMIT = 10000;
@@ -46,9 +49,6 @@ final class TaskifyDB {
         $table = IDUtil::typeToTable($nodeType);
         $conn = await self::genConnection();
         $limit = min($limit, self::MAX_FETCH_LIMIT);
-        // Note: There seems to be a problem with queryf() function. It is
-        // apparently crashing hhvm and no stacktrace provided. That's why
-        // queryf is used everywhere.
         $result = await $conn->query(sprintf("SELECT * from %s WHERE is_deleted = 0 LIMIT %d", $table, $limit));
         // A vector of vector objects holding the string values of each column
         // in the query
@@ -115,7 +115,7 @@ final class TaskifyDB {
       $conn = await self::genConnection();
       $table = IDUtil::typeToTable($node_type);
       $data = json_encode($fields);
-      $q = sprintf("INSERT INTO %s (data) VALUES ('%s')", $table, $data);
+      $q = sprintf("INSERT INTO %s (data) VALUES ('%s')", $table, $conn->escapeString($data));
       $res = await $conn->query($q);
       return $res->lastInsertId();
     }
@@ -135,10 +135,14 @@ final class TaskifyDB {
         $key_str = sprintf('"$.%s"', $field);
         $value_str = "";
         if (is_string($value)) {
-          $value_str = sprintf('"%s"', $value);
+          $value_str = sprintf('"%s"', $conn->escapeString($value));
         } else if (is_int($value)) {
           $value_str = (string)$value;
         } else if (is_array($value) && array_values($value) === $value) {
+          array_map(
+            $val ==> is_string($val) ? $conn->escapeString($val) : $val,
+            $value,
+          );
           $value_str = sprintf("JSON_ARRAY(%s)", substr(json_encode($value), 1, -1));
         } else  {
           invariant_violation('Unimplemented field type found in in genUpdateNode');
@@ -173,20 +177,20 @@ final class TaskifyDB {
         throw new Exception('Edge already exists');
       }
 
-      $json_data = json_encode($data);
       $conn = await self::genConnection();
+      $escaped_json_data = $conn->escapeString(json_encode($data));
       if ($inverse_type !== null) {
         // TODO add ON DUPLiCATE kEY UPDATE so that we dont' create duplicaete
         // rows
         await $conn->query(sprintf(
           "INSERT INTO edge (id1, id2, type, data) VALUES (%d, %d, %d, '%s'), (%d, %d, %d, '%s')",
-          $id1, $id2, (int)$edge_type, $json_data,
-          $id2, $id1, (int)$inverse_type, $json_data
+          $id1, $id2, (int)$edge_type, $escaped_json_data,
+          $id2, $id1, (int)$inverse_type, $escaped_json_data
         ));
       } else {
         await $conn->query(sprintf(
           "INSERT INTO edge (id1, id2, type, data) VALUES (%d, %d, %d, '%s')",
-          $id1, $id2, (int)$edge_type, $json_data,
+          $id1, $id2, (int)$edge_type, $escaped_json_data,
         ));
       }
     }
@@ -227,8 +231,8 @@ final class TaskifyDB {
       $conn = await self::genConnection();
       $result = await $conn->query(sprintf(
         "SELECT value from hash WHERE type = '%s' AND `key` = '%s'",
-        $hash_type,
-        $key
+        $conn->escapeString($hash_type),
+        $conn->escapeString($key),
       ));
       // There shouldn't be more than one row returned for one user id
       invariant($result->numRows() <= 1, 'Must be at most 1 row');
@@ -248,10 +252,10 @@ final class TaskifyDB {
       $encoded_value = json_encode($value);
       await $conn->query(sprintf(
         "INSERT INTO hash (type, `key`, value) VALUES('%s', '%s', '%s') ON DUPLICATE KEY UPDATE value='%s'",
-        $has_type,
-        $key,
-        $encoded_value,
-        $encoded_value,
+        $conn->escapeString($has_type),
+        $conn->escapeString($key),
+        $conn->escapeString($encoded_value),
+        $conn->escapeString($encoded_value),
       ));
     }
 }
