@@ -14,7 +14,7 @@ final class ApiActivityNode extends ApiNode<Activity> {
   public async function genFields(
   ): Awaitable<ImmMap<string, ApiFieldBase>> {
     return ImmMap {
-      'id' => ApiField::scalar('getIDString'),
+      'id' => ApiField::scalar('getID'),
       'created_time' => ApiField::scalar('getCreatedTime'),
       'updated_time' => ApiField::scalar('getUpdatedTime'),
 
@@ -38,6 +38,9 @@ final class ApiActivityNode extends ApiNode<Activity> {
 
       'added_subscribers' => ApiField::listOfNodes('getAddedSubscriberIDs', ApiUserNode::class),
       'removed_subscribers' => ApiField::listOfNodes('getRemovedSubscriberIDs', ApiUserNode::class),
+
+      'old_owner' => ApiField::node('getOldOwnerID', ApiUserNode::class),
+      'new_owner' => ApiField::node('getNewOwnerID', ApiUserNode::class),
     };
   }
 

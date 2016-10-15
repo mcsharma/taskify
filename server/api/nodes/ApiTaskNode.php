@@ -17,7 +17,7 @@ final class ApiTaskNode extends ApiNode<Task> {
   public async function genFields(
   ): Awaitable<ImmMap<string, ApiFieldBase>> {
     return ImmMap {
-      'id' => ApiField::scalar('getIDString'),
+      'id' => ApiField::scalar('getID'),
       'created_time' => ApiField::scalar('getCreatedTime'),
       'updated_time' => ApiField::scalar('getUpdatedTime'),
       'status' => ApiField::scalar('getStatus'),

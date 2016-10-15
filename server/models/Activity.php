@@ -22,7 +22,8 @@ final class Activity extends NodeBase {
   private ?Vector<int> $removedTagIDs;
   private ?Vector<int> $addedSubscriberIDs;
   private ?Vector<int> $removedSubscriberIDs;
-
+  private ?int $oldOwnerID;
+  private ?int $newOwnerID;
 
   public function __construct(int $viewerID, Map<string, string> $node) {
     parent::__construct($viewerID, $node);
@@ -49,6 +50,11 @@ final class Activity extends NodeBase {
     if ($this->changedField === TaskField::PRIORITY) {
       $this->oldPriority = Priority::coerce($data['old_priority']);
       $this->newPriority = Priority::assert($data['new_priority']);
+    }
+
+    if ($this->changedField === TaskField::OWNER) {
+      $this->oldOwnerID = idx($data, 'old_owner_id') ?: null;
+      $this->newOwnerID = idx($data, 'new_owner_id') ?: null;
     }
 
     if ($this->changedField === TaskField::TAGS) {
@@ -108,11 +114,20 @@ final class Activity extends NodeBase {
   public function getRemovedTagIDs(): ?Vector<int> {
     return $this->removedTagIDs;
   }
+
   public function getAddedSubscriberIDs(): ?Vector<int> {
     return $this->addedSubscriberIDs;
   }
 
   public function getRemovedSubscriberIDs(): ?Vector<int> {
     return $this->removedSubscriberIDs;
+  }
+
+  public function getOldOwnerID(): ?int {
+    return $this->oldOwnerID;
+  }
+
+  public function getNewOwnerID(): ?int {
+    return $this->newOwnerID;
   }
  }

@@ -14,8 +14,10 @@ final class ApiUserCreatedTasksPost extends ApiPostBase {
       'status' => (new ApiStringEnumParam(TaskStatus::getValues()))
         ->defaultValue(TaskStatus::OPEN),
       'description' => new ApiStringParam(),
-      'owner_id' => new ApiNodeIDParam(),
+      'owner_id' => (new ApiNodeIDParam())->allowZero(),
       'priority' => new ApiStringEnumParam(Priority::getValues()),
+      'tags' => new ApiVectorParam(new ApiNodeIDParam()),
+      'subscribers' => new ApiVectorParam(new ApiNodeIDParam()),
     };
   }
 
@@ -37,6 +39,20 @@ final class ApiUserCreatedTasksPost extends ApiPostBase {
         (int)$params['owner_id'],
         $task_id,
       );
+    }
+    if ($params->contains('tags')) {
+      $tags = $params['tags'];
+      invariant($tags instanceof Vector, 'for hack');
+      foreach ($tags as $tag_id) {
+        await TaskifyDB::genCreateEdge(EdgeType::TASK_TO_TAG, $task_id, $tag_id);
+      }
+    }
+    if ($params->contains('subscribers')) {
+      $subscribers = $params['subscribers'];
+      invariant($subscribers instanceof Vector, 'for hack');
+      foreach ($subscribers as $subscriber_id) {
+        await TaskifyDB::genCreateEdge(EdgeType::TASK_TO_SUBSCRIBER, $task_id, $subscriber_id);
+      }
     }
     return Map {
       'id' => $task_id,

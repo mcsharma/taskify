@@ -16,7 +16,7 @@ final class ApiUserNode extends ApiNode<User> {
   public async function genFields(
   ): Awaitable<ImmMap<string, ApiFieldBase>> {
     return ImmMap {
-      'id' => ApiField::scalar('getIDString'),
+      'id' => ApiField::scalar('getID'),
       'created_time' => ApiField::scalar('getCreatedTime'),
       'email' => ApiField::scalar('getEmail'),
       'name' => ApiField::scalar('getName'),

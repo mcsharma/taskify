@@ -71,7 +71,7 @@ final class ApiLogin {
       // finally we generate access token if it is a valid user and don't have
       // a valid token currently.
       $access_token = base64_encode(
-        $user_id.bin2hex(openssl_random_pseudo_bytes(16)),
+        $user_id.':'.bin2hex(openssl_random_pseudo_bytes(16)),
       );
       await TaskifyDB::genSetHash('user_id_to_token', (string)$user_id, Map {
         'token' => $access_token,
@@ -80,7 +80,7 @@ final class ApiLogin {
     invariant(is_string($access_token), 'token must be a non-null string at this point');
     return Map {
       'fbid' => $fbUserID,
-      'userID' => $user_id,
+      'viewerID' => $user_id,
       'authToken' => $access_token,
     };
   }

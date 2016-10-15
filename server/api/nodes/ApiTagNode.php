@@ -15,7 +15,7 @@ final class ApiTagNode extends ApiNode<Tag> {
   ): Awaitable<ImmMap<string, ApiFieldBase>> {
     return ImmMap {
       // TODO takeout common field defs into a trait
-      'id' => ApiField::scalar('getIDString'),
+      'id' => ApiField::scalar('getID'),
       'created_time' => ApiField::scalar('getCreatedTime'),
       'updated_time' => ApiField::scalar('getUpdatedTime'),
       'caption' => ApiField::scalar('getCaption'),
