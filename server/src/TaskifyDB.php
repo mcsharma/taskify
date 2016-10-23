@@ -1,9 +1,5 @@
 <?hh // strict
 
-require_once('IDUtil.php');
-require_once('NodeType.php');
-require_once('EdgeType.php');
-require_once('ServerConfig.php');
 
 // Note: There seems to be a problem with queryf() function. It is
 // apparently crashing hhvm and with stacktrace provided. That's why

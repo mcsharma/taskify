@@ -1,8 +1,5 @@
 <?hh // strict
 
-require_once('api/fields/ApiScalarField.php');
-require_once('api/fields/ApiNodeListField.php');
-require_once('api/fields/ApiNode.php');
 
 abstract final class ApiField {
 

@@ -1,5 +1,4 @@
 <?hh // strict
-require_once('TaskifyDB.php');
 
 final class ApiLogin {
 

@@ -1,6 +1,5 @@
 <?hh // strict
 
-require_once('TaskifyDB.php');
 
 <<__ConsistentConstruct>>
 abstract class NodeBase {

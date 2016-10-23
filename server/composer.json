@@ -1,0 +1,6 @@
+{
+  "name": "mcsharma1990/taskify",
+  "require": {
+    "fredemmott/hhvm-autoload": "^1.0"
+  }
+}

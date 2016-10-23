@@ -1,6 +1,5 @@
 <?hh // strict
 
-require_once('EdgeBase.php');
 
 final class TaskToTagsEdge extends EdgeBase<Tag> {
 

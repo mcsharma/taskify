@@ -1,6 +1,5 @@
 <?hh // strict
 
-require_once('NodeBase.php');
 
 final class User extends NodeBase {
 

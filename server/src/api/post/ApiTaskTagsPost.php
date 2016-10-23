@@ -1,8 +1,5 @@
 <?hh // strict
 
-require_once('ApiPostBase.php');
-require_once('api/params/ApiNodeIDParam.php');
-require_once('api/params/ApiParamBase.php');
 
 final class ApiTaskTagsPost extends ApiPostBase {
 

@@ -1,6 +1,5 @@
 <?hh // strict
 
-require_once('EdgeBase.php');
 
 final class TaskToActivitiesEdge extends EdgeBase<Activity> {
 

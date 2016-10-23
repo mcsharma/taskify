@@ -1,6 +1,5 @@
 <?hh
 
-require_once('ApiFieldBase.php');
 
 class ApiScalarField extends ApiFieldBase {
 

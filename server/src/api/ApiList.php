@@ -1,12 +1,5 @@
 <?hh
 
-require_once ('api/post/ApiUserCreatedTasksPost.php');
-require_once ('api/post/ApiTaskTagsPost.php');
-require_once ('api/post/ApiTaskPost.php');
-require_once ('api/post/ApiTaskSubscribersPost.php');
-require_once ('api/root_edges/ApiUsersEdge.php');
-require_once ('api/root_edges/ApiRootEdgeBase.php');
-require_once ('api/root_edges/ApiTagsEdge.php');
 
 final abstract class ApiList {
   public static function post(): ImmVector<classname<ApiPostBase>> {

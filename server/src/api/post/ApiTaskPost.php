@@ -1,7 +1,5 @@
 <?hh // strict
 
-require_once ('api/params/ApiStringParam.php');
-require_once ('api/params/ApiVectorParam.php');
 
 final class ApiTaskPost extends ApiPostBase {
 

@@ -1,6 +1,5 @@
 <?hh // strict
 
-require_once('ApiParamBase.php');
 
 // TODO accept node type in constructor
 final class ApiNodeIDParam extends ApiParamBase {

@@ -8,3 +8,6 @@ client/npm-debug.log
 .idea/
 www.pid
 *.DS_Store
+
+server/composer.phar
+server/vendor/

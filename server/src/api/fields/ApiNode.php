@@ -1,8 +1,5 @@
 <?hh
 
-require_once('ApiScalarField.php');
-require_once('ApiNodeListField.php');
-require_once('ApiEdge.php');
 
 <<__ConsistentConstruct>>
 abstract class ApiNode<+T as NodeBase> extends ApiScalarField {

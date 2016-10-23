@@ -1,6 +1,5 @@
 <?hh // strict
 
-require_once ('NodeBase.php');
 
 final class Tag extends NodeBase {
 

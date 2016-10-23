@@ -1,6 +1,5 @@
 <?hh // strict
 
-require_once('RootEdgeBase.php');
 
 final class UsersEdge extends RootEdgeBase<User> {
 

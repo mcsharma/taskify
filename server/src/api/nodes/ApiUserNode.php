@@ -1,11 +1,5 @@
 <?hh // strict
 
-require_once('api/fields/ApiNode.php');
-require_once('api/fields/ApiFieldBase.php');
-require_once('api/edges/ApiUserTasksEdge.php');
-require_once('api/edges/ApiUserCreatedTasksEdge.php');
-require_once('api/edges/ApiUserActivitiesEdge.php');
-require_once('models/User.php');
 
 final class ApiUserNode extends ApiNode<User> {
 

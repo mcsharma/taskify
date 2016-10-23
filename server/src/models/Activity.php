@@ -1,6 +1,5 @@
 <?hh // strict
 
-require_once('metadata/TaskMetadata.php');
 
 final class Activity extends NodeBase {
 

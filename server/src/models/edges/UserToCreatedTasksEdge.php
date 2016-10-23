@@ -1,6 +1,5 @@
 <?hh // strict
 
-require_once('EdgeBase.php');
 
 final class UserToCreatedTasksEdge extends EdgeBase<Task> {
 

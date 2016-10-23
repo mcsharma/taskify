@@ -3,7 +3,7 @@
 set_error_handler(get_error_handler());
 set_exception_handler(get_exception_handler());
 
-require_once('api/ApiServer.php');
+require_once('vendor/hh_autoload.php');
 
 if ($_ENV['dev']) {
     header("Access-Control-Allow-Origin: *");

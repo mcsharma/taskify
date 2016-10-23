@@ -1,6 +1,5 @@
 <?hh
 
-require_once('ApiScalarField.php');
 
 final class ApiNodeListField<T as NodeBase> extends ApiScalarField {
 

@@ -1,6 +1,5 @@
 <?hh // strict
 
-require_once('ApiParamBase.php');
 
 final class ApiStringParam extends ApiParamBase {
 

@@ -1,7 +1,5 @@
 <?hh // strict
 
-require_once('ApiFieldBase.php');
-require_once('api/common/TApiEdgeCommon.php');
 
 <<__ConsistentConstruct>>
 abstract class ApiEdge<T as NodeBase> extends ApiFieldBase {

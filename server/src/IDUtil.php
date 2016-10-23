@@ -1,11 +1,6 @@
 <?hh // strict
 
 require('NodeType.php');
-require_once ('api/nodes/ApiTagNode.php');
-require_once ('api/nodes/ApiUserNode.php');
-require_once ('api/nodes/ApiTaskNode.php');
-require_once ('api/nodes/ApiActivityNode.php');
-require_once ('models/Activity.php');
 
 final class IDUtil {
 

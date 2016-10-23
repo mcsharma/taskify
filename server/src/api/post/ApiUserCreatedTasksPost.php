@@ -1,10 +1,5 @@
 <?hh // strict
 
-require_once('ApiPostBase.php');
-require_once('api/params/ApiStringParam.php');
-require_once('api/params/ApiNodeIDParam.php');
-require_once('api/params/ApiStringEnumParam.php');
-require_once('metadata/Priority.php');
 
 final class ApiUserCreatedTasksPost extends ApiPostBase {
 

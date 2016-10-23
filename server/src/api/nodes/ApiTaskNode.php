@@ -1,12 +1,5 @@
 <?hh // strict
 
-require_once('api/fields/ApiNode.php');
-require_once('api/fields/ApiFieldBase.php');
-require_once('api/fields/ApiField.php');
-require_once('models/Task.php');
-require_once('api/edges/ApiTaskTagsEdge.php');
-require_once('api/edges/ApiTaskSubscribersEdge.php');
-require_once('api/edges/ApiTaskActivitiesEdge.php');
 
 final class ApiTaskNode extends ApiNode<Task> {
 
