@@ -1,8 +1,8 @@
 <?hh // strict
 
-require('IDUtil.php');
-require('NodeType.php');
-require('EdgeType.php');
+require_once('IDUtil.php');
+require_once('NodeType.php');
+require_once('EdgeType.php');
 require_once('ServerConfig.php');
 
 // Note: There seems to be a problem with queryf() function. It is
